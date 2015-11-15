@@ -9,7 +9,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -66,14 +65,8 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
 
     private void initSwipeRefresh() {
 
-        refreshLayout.setProgressViewOffset(false, 0, (int) TypedValue
-                .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, getResources()
-                        .getDisplayMetrics()));
-
+        refreshLayout.setColorSchemeResources(android.R.color.holo_red_light,android.R.color.holo_blue_dark);
         refreshLayout.setOnRefreshListener(this);
-        refreshLayout.setColorSchemeColors(android.R.color.holo_green_dark,
-                android.R.color.holo_blue_dark, android.R.color.holo_green_light,
-                android.R.color.white);
     }
 
 

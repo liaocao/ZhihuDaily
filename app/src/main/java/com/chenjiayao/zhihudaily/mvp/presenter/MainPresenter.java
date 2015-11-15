@@ -43,10 +43,10 @@ public class MainPresenter {
      */
     public void load() {
         //异步加载文字
-        HttpUtils.getImage(constant.NEWS, new TextHttpResponseHandler() {
+        HttpUtils.get(constant.NEWS, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-
+                Log.i("TADG", "failure");
             }
 
             @Override
@@ -60,7 +60,5 @@ public class MainPresenter {
         Gson gson = new Gson();
         latestNews = gson.fromJson(responseString, LatestNews.class);
         date = latestNews.getDate();
-        Log.i("TAG",date);
-        Log.i("TAG",latestNews.toString());
     }
 }
