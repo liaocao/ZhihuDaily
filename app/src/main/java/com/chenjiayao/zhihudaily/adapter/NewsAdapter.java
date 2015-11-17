@@ -19,15 +19,17 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import cn.trinea.android.view.autoscrollviewpager.AutoScrollViewPager;
 
 /**
  * Created by chen on 2015/11/15.
  */
-public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.BodyViewHolder> implements View.OnClickListener {
+public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements View.OnClickListener {
 
     private Context context;
     private LayoutInflater inflater;
     private List<LatestNews.StoriesEntity> stories;
+    private List<LatestNews.TopStoriesEntity> topStoriesEntities;
 
     ImageLoader imageLoader;
     DisplayImageOptions options;
@@ -59,6 +61,8 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.BodyViewHolder
     public NewsAdapter(Context context) {
         this.context = context;
         this.stories = new ArrayList<>();
+        this.topStoriesEntities = new ArrayList<>();
+
         inflater = LayoutInflater.from(context);
 
         imageLoader = ImageLoader.getInstance();
@@ -75,31 +79,42 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.BodyViewHolder
      *
      * @param s
      */
-    public void setList(List<LatestNews.StoriesEntity> s) {
+    public void setStoriesList(List<LatestNews.StoriesEntity> s) {
         stories.clear();
         this.stories.addAll(s);
         notifyDataSetChanged();
     }
 
-    public boolean isHeader(int pos) {
-        return 0 == pos;
-    }
-
-
-    @Override
-    public BodyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.item_news, parent, false);
-        return new BodyViewHolder(view);
+    public void setTopStoriesList(List<LatestNews.TopStoriesEntity> s) {
+        topStoriesEntities.clear();
+        topStoriesEntities.addAll(s);
+        notifyDataSetChanged();
     }
 
     @Override
-    public void onBindViewHolder(BodyViewHolder holder, int position) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = null;
+        if (viewType == ITEM_TYPE_HEADER) {
+            view = inflater.inflate(R.layout.item_news_view_pager, parent, false);
+            return new HeadViewHolder(view);
+        } else {
+            view = inflater.inflate(R.layout.item_news, parent, false);
+            return new BodyViewHolder(view);
+        }
+    }
 
-        holder.title.setText(stories.get(position).getTitle());
-        imageLoader.displayImage(stories.get(position).getImages().get(0), holder.picture, options);
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (position == 0) {
 
-        holder.itemView.setTag(position);
-        holder.itemView.setOnClickListener(this);
+        } else {
+            BodyViewHolder viewHolder = (BodyViewHolder) holder;
+            viewHolder.title.setText(stories.get(position).getTitle());
+            imageLoader.displayImage(stories.get(position).getImages().get(0), viewHolder.picture, options);
+
+            viewHolder.itemView.setTag(position);
+            viewHolder.itemView.setOnClickListener(this);
+        }
     }
 
 
@@ -108,6 +123,10 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.BodyViewHolder
         return stories.size();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return position == 0 ? ITEM_TYPE_HEADER : ITEM_TYPE_ITEM;
+    }
 
     public class BodyViewHolder extends RecyclerView.ViewHolder {
 
@@ -119,6 +138,19 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.BodyViewHolder
         public BodyViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+    }
+
+    public class HeadViewHolder extends RecyclerView.ViewHolder {
+        @Bind(R.id.view_pager)
+        AutoScrollViewPager viewPager;
+
+
+        public HeadViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+
+            new TopStoriesAdapter(,topStoriesEntities);
         }
     }
 }

@@ -87,7 +87,8 @@ public class MainPresenter {
         Gson gson = new Gson();
         latestNews = gson.fromJson(responseString, LatestNews.class);
         date = latestNews.getDate();
-        adapter.setList(latestNews.getStories());
+        adapter.setStoriesList(latestNews.getStories());
+        adapter.setTopStoriesList(latestNews.getTop_stories());
     }
 
 
