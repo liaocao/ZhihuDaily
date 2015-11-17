@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.chenjiayao.zhihudaily.R;
+import com.chenjiayao.zhihudaily.adapter.MenuAdapter;
 import com.chenjiayao.zhihudaily.adapter.NewsAdapter;
 import com.chenjiayao.zhihudaily.mvp.presenter.MainPresenter;
 import com.chenjiayao.zhihudaily.mvp.view.MainView;
@@ -139,5 +140,12 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
         });
         mRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+
+        //menuRecyclerView
+        MenuAdapter menuAdapter = new MenuAdapter(MainActivity.this);
+        menuRecyclerView.setAdapter(menuAdapter);
+        menuRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.VERTICAL, false));
+        menuRecyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 }

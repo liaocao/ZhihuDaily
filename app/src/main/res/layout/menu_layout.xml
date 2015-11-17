@@ -15,8 +15,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="不好意思,登录做不出来"
-            android:textColor="@color/textColor"
+            android:text="不好意思,登录没做"
+            android:textColor="@android:color/white"
             android:textSize="20sp"/>
     </LinearLayout>
 
