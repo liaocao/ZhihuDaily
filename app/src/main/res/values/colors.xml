@@ -7,4 +7,5 @@
 
     <color name="textColor">#796E84</color>
     <color name="news_item">#FFF0F0F0</color>
+    <color name="clickColor">#EFBDB6</color>
 </resources>

@@ -129,8 +129,8 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
 
     @Override
     public void initRecyclerView(NewsAdapter adapter) {
-        mRecyclerView.setAdapter(adapter);
 
+        mRecyclerView.setAdapter(adapter);
         adapter.setListener(new NewsAdapter.onClickListener() {
             @Override
             public void onClick(View view, int pos) {
@@ -147,5 +147,12 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
         menuRecyclerView.setAdapter(menuAdapter);
         menuRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.VERTICAL, false));
         menuRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        menuAdapter.setListener(new MenuAdapter.onClickListener() {
+            @Override
+            public void onClick(View v, int pos) {
+                Toast.makeText(MainActivity.this, "pos = " + pos, Toast.LENGTH_SHORT).show();
+                mDrawerLayout.closeDrawers();
+            }
+        });
     }
 }
