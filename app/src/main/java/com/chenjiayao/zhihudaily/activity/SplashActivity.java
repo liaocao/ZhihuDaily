@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
@@ -57,51 +56,57 @@ public class SplashActivity extends BaseActivity {
             startImage.setImageResource(R.mipmap.ic_launcher);
         }
 
-        startImage.animate().scaleX(1.2f).scaleY(1.2f).setListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
+        startImage.animate()
+                .scaleX(1.2f)
+                .scaleY(1.2f)
+                .setListener(new Animate() {
 
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                AsyncHttpClient client = new AsyncHttpClient();
-                //创建异步请求
-                client.get(constant.START_URL + constant.IMAGE, new AsyncHttpResponseHandler() {
                     @Override
-                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    public void onAnimationStart(Animator animation) {
+                        super.onAnimationStart(animation);
+                        loadNews();
+                    }
 
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        if (HttpUtils.isNetworkConnected(SplashActivity.this)) {
 
-                        String responseUrl = new String(responseBody);
-                        try {
-                            JSONObject jsonObject = new JSONObject(responseUrl);
-                            String imageUrl = jsonObject.getString("img");
-                            Log.i("TAG", imageUrl);
-                            saveImage(imageFile, imageUrl);
+                            AsyncHttpClient client = new AsyncHttpClient();
+                            //创建异步请求
+                            client.get(constant.START_URL + constant.IMAGE, new AsyncHttpResponseHandler() {
+                                @Override
+                                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+
+                                    String responseUrl = new String(responseBody);
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(responseUrl);
+                                        String imageUrl = jsonObject.getString("img");
+                                        saveImage(imageFile, imageUrl);
+                                        startActivity();
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                        startActivity();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                                    startActivity();
+                                }
+                            });
+                        } else {
                             startActivity();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
                         }
                     }
+                })
+                .setDuration(3000)
+                .start();
+    }
 
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                        startActivity();
-                    }
-                });
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        }).setDuration(3000).start();
-
+    /**
+     * 提前加载主界面的新闻
+     */
+    private void loadNews() {
 
     }
 
@@ -124,7 +129,6 @@ public class SplashActivity extends BaseActivity {
         HttpUtils.getImage(imageUrl, new BinaryHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] binaryData) {
-                //下载图片
                 if (file.exists()) {
                     file.delete();
                 }
@@ -134,7 +138,6 @@ public class SplashActivity extends BaseActivity {
                     fos.write(binaryData);
                     fos.flush();
                     fos.close();
-                    Log.i("TAG", "downland success");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

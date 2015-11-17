@@ -11,8 +11,10 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.chenjiayao.zhihudaily.R;
+import com.chenjiayao.zhihudaily.adapter.NewsAdapter;
 import com.chenjiayao.zhihudaily.mvp.presenter.MainPresenter;
 import com.chenjiayao.zhihudaily.mvp.view.MainView;
 import com.chenjiayao.zhihudaily.uitls.ToolbarUtils;
@@ -39,33 +41,26 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
     MainPresenter mMainPresenter;
     private ActionBarDrawerToggle toggle;
 
-    boolean isRefreshing = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ToolbarUtils.initToolbar(this, mToolbar, "首页");
-
         mMainPresenter = new MainPresenter(this, this);
+        mMainPresenter.load();
+
+        ToolbarUtils.initToolbar(this, mToolbar, "首页");
+        mMainPresenter.initRecyclerView();
 
         initDrawerLayout();
         initSwipeRefresh();
-        initRecyclerView();
 
-    }
-
-    private void initRecyclerView() {
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this,
-                LinearLayoutManager.VERTICAL, false));
-
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
 
     private void initSwipeRefresh() {
 
-        refreshLayout.setColorSchemeResources(android.R.color.holo_red_light,android.R.color.holo_blue_dark);
+        refreshLayout.setColorSchemeResources(android.R.color.holo_red_light, android.R.color.holo_blue_dark);
         refreshLayout.setOnRefreshListener(this);
     }
 
@@ -113,12 +108,36 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
         return R.layout.activity_main;
     }
 
+
     /**
      * 刷新
      */
     @Override
     public void onRefresh() {
-        mMainPresenter.load();
-        refreshLayout.setRefreshing(false);
+        if (refreshLayout.isRefreshing()) {
+            refreshLayout.setRefreshing(true);
+            mMainPresenter.load();
+        }
+    }
+
+
+    @Override
+    public void isRefreshing(boolean isRefresh) {
+        refreshLayout.setRefreshing(isRefresh);
+    }
+
+    @Override
+    public void initRecyclerView(NewsAdapter adapter) {
+        mRecyclerView.setAdapter(adapter);
+
+        adapter.setListener(new NewsAdapter.onClickListener() {
+            @Override
+            public void onClick(View view, int pos) {
+                //每个Item的点击事件
+                Toast.makeText(MainActivity.this, "pos = " + pos, Toast.LENGTH_SHORT).show();
+            }
+        });
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.VERTICAL, false));
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 }

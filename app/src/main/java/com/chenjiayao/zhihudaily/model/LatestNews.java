@@ -17,9 +17,10 @@ public class LatestNews implements Serializable {
 
     private String date;
 
+    //今天的新闻,这个放RecyclerView列表
     private List<StoriesEntity> stories;
 
-
+    //今天的推荐新闻,这个要放在RecyclerView前面的轮播器里面
     private List<TopStoriesEntity> top_stories;
 
 
@@ -48,6 +49,7 @@ public class LatestNews implements Serializable {
     }
 
 
+    //今天的新闻
     public static class StoriesEntity {
 
         private String title;
@@ -132,16 +134,16 @@ public class LatestNews implements Serializable {
             this.ga_prefix = ga_prefix;
         }
 
-        public void setTitle(String title) {
-            this.title = title;
-        }
-
         public String getImage() {
             return image;
         }
 
         public int getType() {
             return type;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
         }
 
         public int getId() {
