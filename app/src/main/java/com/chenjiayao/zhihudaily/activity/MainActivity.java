@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.chenjiayao.zhihudaily.R;
 import com.chenjiayao.zhihudaily.adapter.MenuAdapter;
 import com.chenjiayao.zhihudaily.adapter.NewsAdapter;
+import com.chenjiayao.zhihudaily.model.LatestNews;
 import com.chenjiayao.zhihudaily.mvp.presenter.MainPresenter;
 import com.chenjiayao.zhihudaily.mvp.view.MainView;
 import com.chenjiayao.zhihudaily.uitls.ToolbarUtils;
@@ -42,6 +43,8 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
     MainPresenter mMainPresenter;
     private ActionBarDrawerToggle toggle;
 
+    NewsAdapter adapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +54,7 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
         mMainPresenter.load();
 
         ToolbarUtils.initToolbar(this, mToolbar, "首页");
-        mMainPresenter.initRecyclerView();
+        initRecyclerView();
 
         initDrawerLayout();
         initSwipeRefresh();
@@ -127,9 +130,9 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
         refreshLayout.setRefreshing(isRefresh);
     }
 
-    @Override
-    public void initRecyclerView(NewsAdapter adapter) {
+    public void initRecyclerView() {
 
+        adapter = new NewsAdapter(MainActivity.this, getSupportFragmentManager());
         mRecyclerView.setAdapter(adapter);
         adapter.setListener(new NewsAdapter.onClickListener() {
             @Override
@@ -154,5 +157,11 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
                 mDrawerLayout.closeDrawers();
             }
         });
+    }
+
+    @Override
+    public void setList(LatestNews latestNews) {
+        adapter.setStoriesList(latestNews.getStories());
+        adapter.setTopStoriesList(latestNews.getTop_stories());
     }
 }

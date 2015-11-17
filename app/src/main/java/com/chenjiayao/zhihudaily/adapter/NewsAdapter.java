@@ -1,6 +1,7 @@
 package com.chenjiayao.zhihudaily.adapter;
 
 import android.content.Context;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +32,8 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     private List<LatestNews.StoriesEntity> stories;
     private List<LatestNews.TopStoriesEntity> topStoriesEntities;
 
+    FragmentManager manager;
+
     ImageLoader imageLoader;
     DisplayImageOptions options;
 
@@ -58,10 +61,11 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         this.listener = listener;
     }
 
-    public NewsAdapter(Context context) {
+    public NewsAdapter(Context context, FragmentManager manager) {
         this.context = context;
         this.stories = new ArrayList<>();
         this.topStoriesEntities = new ArrayList<>();
+        this.manager = manager;
 
         inflater = LayoutInflater.from(context);
 
@@ -141,6 +145,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         }
     }
 
+
     public class HeadViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.view_pager)
         AutoScrollViewPager viewPager;
@@ -150,7 +155,11 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             super(itemView);
             ButterKnife.bind(this, itemView);
 
-            new TopStoriesAdapter(,topStoriesEntities);
+            TopStoriesAdapter adapter = new TopStoriesAdapter(manager, topStoriesEntities,context);
+            viewPager.setAdapter(adapter);
+            viewPager.startAutoScroll();
+            viewPager.setCycle(true);
+            viewPager.setSlideBorderMode(AutoScrollViewPager.SLIDE_BORDER_MODE_CYCLE);
         }
     }
 }

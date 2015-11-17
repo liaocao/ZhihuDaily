@@ -2,7 +2,6 @@ package com.chenjiayao.zhihudaily.mvp.presenter;
 
 import android.content.Context;
 
-import com.chenjiayao.zhihudaily.adapter.NewsAdapter;
 import com.chenjiayao.zhihudaily.constant;
 import com.chenjiayao.zhihudaily.model.LatestNews;
 import com.chenjiayao.zhihudaily.mvp.view.MainView;
@@ -31,7 +30,7 @@ public class MainPresenter {
      */
     String date;
 
-    NewsAdapter adapter;
+
 
     boolean isLoading = false;
 
@@ -87,13 +86,7 @@ public class MainPresenter {
         Gson gson = new Gson();
         latestNews = gson.fromJson(responseString, LatestNews.class);
         date = latestNews.getDate();
-        adapter.setStoriesList(latestNews.getStories());
-        adapter.setTopStoriesList(latestNews.getTop_stories());
+        mainView.setList(latestNews);
     }
 
-
-    public void initRecyclerView() {
-        adapter = new NewsAdapter(context);
-        mainView.initRecyclerView(adapter);
-    }
 }
