@@ -21,23 +21,22 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-
 /**
  * Created by chen on 2015/11/19.
  */
-public class autoScrollViewPager extends FrameLayout implements View.OnClickListener, ViewPager.OnPageChangeListener, View.OnScrollChangeListener {
+public class autoScrollViewPager extends FrameLayout
+        implements View.OnClickListener, ViewPager.OnPageChangeListener {
 
 
-    @Bind(R.id.ll_dot)
+    //    @Bind(R.id.ll_dot)
     LinearLayout inflateDot;
 
-    @Bind(R.id.view_pager)
+    //    @Bind(R.id.vp)
     ViewPager viewPager;
 
-
+    //    @Bind(R.id.item_top_title)
     TextView tvTitle;
+    //    @Bind(R.id.item_top_picture)
     ImageView ivPicture;
 
 
@@ -90,7 +89,6 @@ public class autoScrollViewPager extends FrameLayout implements View.OnClickList
 
     public autoScrollViewPager(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
         topStoriesEntities = new ArrayList<>();
         imageLoader = ImageLoader.getInstance();
 
@@ -127,7 +125,10 @@ public class autoScrollViewPager extends FrameLayout implements View.OnClickList
          * 填充指示器
          */
         View view = LayoutInflater.from(context).inflate(R.layout.dot_layout, this, true);
-        ButterKnife.bind(view, this);
+//        ButterKnife.bind(view, this);
+
+        viewPager = (ViewPager) view.findViewById(R.id.vp);
+        inflateDot = (LinearLayout) view.findViewById(R.id.ll_dot);
 
         inflateDot.removeAllViews();
 
@@ -147,9 +148,12 @@ public class autoScrollViewPager extends FrameLayout implements View.OnClickList
             dots.add(imageView);
         }
 
+
         for (int i = 0; i <= len + 1; i++) {
             View fragmentView = LayoutInflater.from(context).inflate(R.layout.view_pager_item, null);
-            ButterKnife.bind(fragmentView, this);
+//            ButterKnife.bind(fragmentView, this);
+            tvTitle = (TextView) fragmentView.findViewById(R.id.item_top_title);
+            ivPicture = (ImageView) fragmentView.findViewById(R.id.item_top_picture);
             if (len + 1 == i) {
                 imageLoader.displayImage(topStoriesEntities.get(0).getImage(), ivPicture, options);
                 tvTitle.setText(topStoriesEntities.get(0).getTitle());
@@ -160,13 +164,17 @@ public class autoScrollViewPager extends FrameLayout implements View.OnClickList
                 imageLoader.displayImage(topStoriesEntities.get(i - 1).getImage(), ivPicture, options);
                 tvTitle.setText(topStoriesEntities.get(i - 1).getTitle());
             }
+            //填充了 len + 1个图片
             views.add(fragmentView);
             fragmentView.setOnClickListener(this);
-            currentItme = 1;
-            viewPager.setAdapter(new MyPagerAdapter());
-            viewPager.setOnScrollChangeListener(this);
-            startPlay();
+
         }
+        currentItme = 1;
+        viewPager.setCurrentItem(1);
+        viewPager.setFocusable(true);
+        viewPager.setAdapter(new MyPagerAdapter());
+        viewPager.setOnPageChangeListener(this);
+        startPlay();
     }
 
     /**
@@ -186,7 +194,7 @@ public class autoScrollViewPager extends FrameLayout implements View.OnClickList
         handler.postDelayed(task, 3000);
     }
 
-
+    //轮播核心代码
     private final Runnable task = new Runnable() {
         //开始自动轮播
         @Override
@@ -213,11 +221,13 @@ public class autoScrollViewPager extends FrameLayout implements View.OnClickList
 
         @Override
         public int getCount() {
-            return topStoriesEntities.size();
+
+            return views.size();
         }
 
         @Override
         public boolean isViewFromObject(View view, Object object) {
+
             return view == object;
         }
 
@@ -250,19 +260,19 @@ public class autoScrollViewPager extends FrameLayout implements View.OnClickList
                 dots.get(i).setImageResource(R.drawable.dot_blur);
             }
         }
-
     }
 
     @Override
     public void onPageScrollStateChanged(int state) {
         switch (state) {
-            case 1:
+            case ViewPager.SCROLL_STATE_DRAGGING:
                 isAutoPlay = false;
                 break;
-            case 2:
+            case ViewPager.SCROLL_STATE_SETTLING:
                 isAutoPlay = true;
-            case 0:
-                if (0 != viewPager.getCurrentItem()) {
+                break;
+            case ViewPager.SCROLL_STATE_IDLE:
+                if (0 == viewPager.getCurrentItem()) {
                     viewPager.setCurrentItem(topStoriesEntities.size(), false);
                 } else if (viewPager.getCurrentItem() == topStoriesEntities.size() + 1) {
                     viewPager.setCurrentItem(1, false);
@@ -271,11 +281,5 @@ public class autoScrollViewPager extends FrameLayout implements View.OnClickList
                 isAutoPlay = true;
                 break;
         }
-
-    }
-
-    @Override
-    public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-
     }
 }

@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.chenjiayao.zhihudaily.R;
 import com.chenjiayao.zhihudaily.model.LatestNews;
+import com.chenjiayao.zhihudaily.ui.autoScrollViewPager;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -40,7 +41,9 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     public void onClick(View v) {
         if (listener != null) {
             int pos = (int) v.getTag();
-            listener.onClick(v, pos);
+            if (0 != pos) {
+                listener.onClick(v, pos);
+            }
         }
     }
 
@@ -97,14 +100,20 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = null;
-        view = inflater.inflate(R.layout.item_news, parent, false);
-        return new BodyViewHolder(view);
+        if (viewType == ITEM_TYPE_HEADER) {
+            view = inflater.inflate(R.layout.item_top_news, parent, false);
+            return new HeadViewHolder(view);
+        } else {
+            view = inflater.inflate(R.layout.item_news, parent, false);
+            return new BodyViewHolder(view);
+        }
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (position == 0) {
-
+            HeadViewHolder viewHolder = (HeadViewHolder) holder;
+            viewHolder.pager.setTopStoriesEntities(topStoriesEntities);
         } else {
             BodyViewHolder viewHolder = (BodyViewHolder) holder;
             viewHolder.title.setText(stories.get(position).getTitle());
@@ -133,6 +142,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         @Bind(R.id.iv_picture)
         ImageView picture;
 
+
         public BodyViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -140,4 +150,14 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     }
 
 
+    public class HeadViewHolder extends RecyclerView.ViewHolder {
+
+        @Bind(R.id.auto_scroll_page)
+        autoScrollViewPager pager;
+
+        public HeadViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
+    }
 }
