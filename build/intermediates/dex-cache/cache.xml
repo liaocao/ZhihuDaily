@@ -2,11 +2,11 @@
 <items version="2" >
 
     <item
-        jar="C:\Users\chen\.gradle\caches\modules-2\files-2.1\cn.trinea.android.view.autoscrollviewpager\android-auto-scroll-view-pager\1.1.2\8ad9237a8b0965696ea32ca9c1de173e082eaad4\android-auto-scroll-view-pager-1.1.2.jar"
+        jar="C:\Users\chen\.gradle\caches\modules-2\files-2.1\com.readystatesoftware.systembartint\systembartint\1.0.3\de4f7404e2f58d8f6e83cb1e85d0c2d6c2987287\systembartint-1.0.3.jar"
         jumboMode="false"
         revision="23.0.1"
-        sha1="8ad9237a8b0965696ea32ca9c1de173e082eaad4">
-        <dex dex="G:\Users\chen\AndroidStudioProjects\ZhihuDaily\app\build\intermediates\pre-dexed\debug\android-auto-scroll-view-pager-1.1.2-2341d55b3cfccf8ec2ab7c3af1812d19784c524a.jar" />
+        sha1="de4f7404e2f58d8f6e83cb1e85d0c2d6c2987287">
+        <dex dex="G:\Users\chen\AndroidStudioProjects\ZhihuDaily\app\build\intermediates\pre-dexed\debug\systembartint-1.0.3-721841e954ff41d105ef24a51460cf07c8ea1d20.jar" />
     </item>
 
 </items>

@@ -16,6 +16,16 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(getContentLayout());
         ButterKnife.bind(this);
+        initStatusBar();
+    }
+
+    private void initStatusBar() {
+//        if (Build.VERSION_CODES.KITKAT == Build.VERSION.SDK_INT) {
+//            SystemBarTintManager manager = new SystemBarTintManager(this);
+//            manager.setStatusBarTintEnabled(true);
+//            manager.setNavigationBarTintEnabled(true);
+//            manager.setStatusBarTintResource(R.color.colorPrimaryDark);
+//        }
     }
 
 

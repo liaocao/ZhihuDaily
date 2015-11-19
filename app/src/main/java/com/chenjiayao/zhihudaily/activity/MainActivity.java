@@ -1,5 +1,6 @@
 package com.chenjiayao.zhihudaily.activity;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -143,6 +144,8 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
             @Override
             public void onPageItemClick(View view, LatestNews.TopStoriesEntity entity) {
                 Toast.makeText(MainActivity.this, entity.getTitle(), Toast.LENGTH_SHORT).show();
+
+
             }
         });
 
@@ -152,6 +155,17 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
             public void onClick(View view, LatestNews.StoriesEntity entity) {
                 //每个Item的点击事件
                 Toast.makeText(MainActivity.this, entity.getTitle(), Toast.LENGTH_SHORT).show();
+
+                LatestNews.StoriesEntity storiesEntity = new LatestNews.StoriesEntity();
+                storiesEntity.setImages(entity.getImages());
+                storiesEntity.setId(entity.getId());
+                storiesEntity.setGa_prefix(entity.getGa_prefix());
+                storiesEntity.setTitle(entity.getTitle());
+                storiesEntity.setType(entity.getType());
+
+                Intent intent = new Intent(MainActivity.this, LatestContentActivity.class);
+                intent.putExtra("entity", storiesEntity);
+                startActivity(intent);
             }
         });
 

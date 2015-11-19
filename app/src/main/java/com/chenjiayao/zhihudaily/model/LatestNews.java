@@ -50,7 +50,7 @@ public class LatestNews implements Serializable {
 
 
     //今天的新闻
-    public static class StoriesEntity {
+    public static class StoriesEntity implements Serializable{
 
         private String title;
         private String ga_prefix;
@@ -111,7 +111,7 @@ public class LatestNews implements Serializable {
     /**
      * 推荐,在轮播器里面的
      */
-    public static class TopStoriesEntity {
+    public static class TopStoriesEntity implements Serializable{
         private String image;
         private int type;
         private int id;
