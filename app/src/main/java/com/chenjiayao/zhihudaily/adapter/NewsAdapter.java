@@ -25,7 +25,7 @@ import butterknife.ButterKnife;
 /**
  * Created by chen on 2015/11/15.
  */
-public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements View.OnClickListener {
+public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements View.OnClickListener, autoScrollViewPager.OnItemClickListener {
 
     private Context context;
     private LayoutInflater inflater;
@@ -37,31 +37,49 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     ImageLoader imageLoader;
     DisplayImageOptions options;
 
+
+    public onViewPagerItemClickListener viewPagerItemClickListener;
+    public onRecyclerViewItemListener recyclerViewItemListener;
+
+    public interface onViewPagerItemClickListener {
+        void onPageItemClick(View view, LatestNews.TopStoriesEntity entity);
+    }
+
+    public interface onRecyclerViewItemListener {
+        void onClick(View view, LatestNews.StoriesEntity storiesEntity);
+    }
+
+
+    @Override
+    public void onItemClick(View v, LatestNews.TopStoriesEntity entity) {
+        if (viewPagerItemClickListener != null) {
+            viewPagerItemClickListener.onPageItemClick(v, entity);
+        }
+    }
+
     @Override
     public void onClick(View v) {
-        if (listener != null) {
+        if (recyclerViewItemListener != null) {
             int pos = (int) v.getTag();
             if (0 != pos) {
-                listener.onClick(v, pos);
+                recyclerViewItemListener.onClick(v, stories.get(pos));
             }
         }
     }
 
-    public interface onClickListener {
-        void onClick(View view, int pos);
+    public void setListener(onRecyclerViewItemListener listener) {
+        this.recyclerViewItemListener = listener;
     }
 
 
-    public onClickListener listener;
+    public void setListener(onViewPagerItemClickListener listener) {
+        this.viewPagerItemClickListener = listener;
+    }
 
 
     private static final int ITEM_TYPE_HEADER = 0;
     private static final int ITEM_TYPE_ITEM = 1;
 
-
-    public void setListener(onClickListener listener) {
-        this.listener = listener;
-    }
 
     public NewsAdapter(Context context, FragmentManager manager) {
         this.context = context;
@@ -114,6 +132,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         if (position == 0) {
             HeadViewHolder viewHolder = (HeadViewHolder) holder;
             viewHolder.pager.setTopStoriesEntities(topStoriesEntities);
+            viewHolder.pager.setListener(this);
         } else {
             BodyViewHolder viewHolder = (BodyViewHolder) holder;
             viewHolder.title.setText(stories.get(position).getTitle());

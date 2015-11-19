@@ -69,7 +69,7 @@ public class autoScrollViewPager extends FrameLayout
 
 
     public interface OnItemClickListener {
-        public void onClick(View v, LatestNews.TopStoriesEntity entity);
+        public void onItemClick(View v, LatestNews.TopStoriesEntity entity);
     }
 
 
@@ -184,9 +184,9 @@ public class autoScrollViewPager extends FrameLayout
      */
     @Override
     public void onClick(View v) {
-        if (listener != null) {
+        if (listener != null && viewPager.getCurrentItem() >= 0) {
             LatestNews.TopStoriesEntity entity = topStoriesEntities.get(viewPager.getCurrentItem() - 1);
-            listener.onClick(v, entity);
+            listener.onItemClick(v, entity);
         }
     }
 

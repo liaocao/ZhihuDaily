@@ -134,15 +134,26 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
 
         adapter = new NewsAdapter(MainActivity.this, getSupportFragmentManager());
         mRecyclerView.setAdapter(adapter);
-        adapter.setListener(new NewsAdapter.onClickListener() {
-            @Override
-            public void onClick(View view, int pos) {
-                //每个Item的点击事件
-                Toast.makeText(MainActivity.this, "pos = " + pos, Toast.LENGTH_SHORT).show();
-            }
-        });
+
         mRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        //top新闻的点击事件
+        adapter.setListener(new NewsAdapter.onViewPagerItemClickListener() {
+            @Override
+            public void onPageItemClick(View view, LatestNews.TopStoriesEntity entity) {
+                Toast.makeText(MainActivity.this, entity.getTitle(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        //列表新闻的点击事件
+        adapter.setListener(new NewsAdapter.onRecyclerViewItemListener() {
+            @Override
+            public void onClick(View view, LatestNews.StoriesEntity entity) {
+                //每个Item的点击事件
+                Toast.makeText(MainActivity.this, entity.getTitle(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
 
         //menuRecyclerView
@@ -150,6 +161,7 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
         menuRecyclerView.setAdapter(menuAdapter);
         menuRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.VERTICAL, false));
         menuRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
         menuAdapter.setListener(new MenuAdapter.onClickListener() {
             @Override
             public void onClick(View v, int pos) {
