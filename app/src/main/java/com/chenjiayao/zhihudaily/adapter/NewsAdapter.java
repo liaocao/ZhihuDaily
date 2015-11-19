@@ -20,7 +20,6 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import cn.trinea.android.view.autoscrollviewpager.AutoScrollViewPager;
 
 /**
  * Created by chen on 2015/11/15.
@@ -98,13 +97,8 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = null;
-        if (viewType == ITEM_TYPE_HEADER) {
-            view = inflater.inflate(R.layout.item_news_view_pager, parent, false);
-            return new HeadViewHolder(view);
-        } else {
-            view = inflater.inflate(R.layout.item_news, parent, false);
-            return new BodyViewHolder(view);
-        }
+        view = inflater.inflate(R.layout.item_news, parent, false);
+        return new BodyViewHolder(view);
     }
 
     @Override
@@ -146,20 +140,4 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     }
 
 
-    public class HeadViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.view_pager)
-        AutoScrollViewPager viewPager;
-
-
-        public HeadViewHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
-
-            TopStoriesAdapter adapter = new TopStoriesAdapter(manager, topStoriesEntities,context);
-            viewPager.setAdapter(adapter);
-            viewPager.startAutoScroll();
-            viewPager.setCycle(true);
-            viewPager.setSlideBorderMode(AutoScrollViewPager.SLIDE_BORDER_MODE_CYCLE);
-        }
-    }
 }
