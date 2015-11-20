@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.chenjiayao.zhihudaily.constant;
 import com.chenjiayao.zhihudaily.model.LatestNews;
+import com.chenjiayao.zhihudaily.model.StoriesEntity;
+import com.chenjiayao.zhihudaily.model.beforeContent;
 import com.chenjiayao.zhihudaily.mvp.view.MainView;
 import com.chenjiayao.zhihudaily.uitls.HttpUtils;
 import com.google.gson.Gson;
@@ -30,9 +32,14 @@ public class MainPresenter {
      */
     String date;
 
+    /**
+     * 前一天的日期,这个前一天指的是已经加载出来内容的日期的前一天
+     */
+    String lastDate;
 
 
     boolean isLoading = false;
+    boolean isLoadingMore = false;
 
 
     public MainPresenter(MainView view, Context context) {
@@ -58,7 +65,7 @@ public class MainPresenter {
 
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                    parseResponseString(responseString);
+                    parseTodayResponseString(responseString);
                     mainView.isRefreshing(false);
                     isLoading = false;
                 }
@@ -82,10 +89,48 @@ public class MainPresenter {
      *
      * @param responseString
      */
-    private void parseResponseString(String responseString) {
+    private void parseTodayResponseString(String responseString) {
         Gson gson = new Gson();
         latestNews = gson.fromJson(responseString, LatestNews.class);
         date = latestNews.getDate();
+        lastDate = date;
         mainView.setList(latestNews);
     }
+
+
+    /**
+     * 加载过往信息
+     */
+    public void loadMore() {
+        if (!isLoadingMore) {
+            isLoadingMore = true;
+            HttpUtils.get(constant.BEFORE_URL + date, new TextHttpResponseHandler() {
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    isLoadingMore = false;
+                    parseBeforeResponseString(responseString);
+                }
+            });
+        }
+    }
+
+    private void parseBeforeResponseString(String responseString) {
+        Gson gson = new Gson();
+        beforeContent content = gson.fromJson(responseString, com.chenjiayao.zhihudaily.model.beforeContent.class);
+        date = content.getDate();
+        for (StoriesEntity entity : content.getStories()) {
+            entity.setDate(date);
+        }
+        mainView.addToAdapter(content.getStories());
+    }
 }
+
+
+
+
+

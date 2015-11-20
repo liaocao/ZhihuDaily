@@ -6,6 +6,7 @@ package com.chenjiayao.zhihudaily;
 public class constant {
 
     public static final String START_URL = "http://news-at.zhihu.com/api/4/";
+    public static final String BEFORE_URL = "news/before/";
 
     public static final String IMAGE = "start-image/1080*1776";
 

@@ -18,6 +18,7 @@ import com.chenjiayao.zhihudaily.R;
 import com.chenjiayao.zhihudaily.adapter.MenuAdapter;
 import com.chenjiayao.zhihudaily.adapter.NewsAdapter;
 import com.chenjiayao.zhihudaily.model.LatestNews;
+import com.chenjiayao.zhihudaily.model.StoriesEntity;
 import com.chenjiayao.zhihudaily.mvp.presenter.MainPresenter;
 import com.chenjiayao.zhihudaily.mvp.view.MainView;
 import com.chenjiayao.zhihudaily.uitls.ToolbarUtils;
@@ -138,15 +139,15 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
 
         adapter = new NewsAdapter(MainActivity.this, getSupportFragmentManager());
         mRecyclerView.setAdapter(adapter);
-
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.VERTICAL, false));
+        final LinearLayoutManager manager = new LinearLayoutManager(MainActivity.this, LinearLayoutManager.VERTICAL, false);
+        mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         //top新闻的点击事件
         adapter.setListener(new NewsAdapter.onViewPagerItemClickListener() {
             @Override
             public void onPageItemClick(View view, LatestNews.TopStoriesEntity entity) {
-                LatestNews.StoriesEntity storiesEntity = new LatestNews.StoriesEntity();
+                StoriesEntity storiesEntity = new StoriesEntity();
                 storiesEntity.setId(entity.getId());
                 storiesEntity.setTitle(entity.getTitle());
                 List<String> images = new ArrayList<String>();
@@ -162,12 +163,12 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
         //列表新闻的点击事件
         adapter.setListener(new NewsAdapter.onRecyclerViewItemListener() {
             @Override
-            public void onClick(View view, LatestNews.StoriesEntity entity) {
+            public void onClick(View view, StoriesEntity entity) {
                 //每个Item的点击事件
-                LatestNews.StoriesEntity storiesEntity = new LatestNews.StoriesEntity();
+                StoriesEntity storiesEntity = new StoriesEntity();
                 storiesEntity.setImages(entity.getImages());
                 storiesEntity.setId(entity.getId());
-                storiesEntity.setGa_prefix(entity.getGa_prefix());
+//                storiesEntity.setGa_prefix(entity.getGa_prefix());
                 storiesEntity.setTitle(entity.getTitle());
                 storiesEntity.setType(entity.getType());
 
@@ -186,9 +187,18 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+
+                int visibleItemCount = manager.getChildCount();
+                int totalItemCount = manager.getItemCount();
+                int first = manager.findFirstVisibleItemPosition();
+
+                if (first + visibleItemCount >= totalItemCount) {
+                    //可以加载更多
+                    mMainPresenter.loadMore();
+                }
             }
 
-            
+
         });
 
 
@@ -209,7 +219,17 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
 
     @Override
     public void setList(LatestNews latestNews) {
+        String date = latestNews.getDate();
+        for (StoriesEntity entity :
+                latestNews.getStories()) {
+            entity.setDate(date);
+        }
         adapter.setStoriesList(latestNews.getStories());
         adapter.setTopStoriesList(latestNews.getTop_stories());
+    }
+
+    @Override
+    public void addToAdapter(List<StoriesEntity> stories) {
+        adapter.addList(stories);
     }
 }

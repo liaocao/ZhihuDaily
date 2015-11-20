@@ -11,7 +11,7 @@ import android.widget.ImageView;
 
 import com.chenjiayao.zhihudaily.R;
 import com.chenjiayao.zhihudaily.model.Content;
-import com.chenjiayao.zhihudaily.model.LatestNews;
+import com.chenjiayao.zhihudaily.model.StoriesEntity;
 import com.chenjiayao.zhihudaily.mvp.presenter.LatestContentPresenter;
 import com.chenjiayao.zhihudaily.mvp.view.LatestContentView;
 import com.google.gson.Gson;
@@ -40,7 +40,7 @@ public class LatestContentActivity extends BaseActivity implements LatestContent
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
 
-    private LatestNews.StoriesEntity entity;
+    private StoriesEntity entity;
 
     LatestContentPresenter mPresenter;
     private ImageLoader imageLoader;
@@ -53,7 +53,7 @@ public class LatestContentActivity extends BaseActivity implements LatestContent
 
         mPresenter = new LatestContentPresenter(this, this);
 
-        entity = (LatestNews.StoriesEntity) getIntent().getSerializableExtra("entity");
+        entity = (StoriesEntity) getIntent().getSerializableExtra("entity");
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);

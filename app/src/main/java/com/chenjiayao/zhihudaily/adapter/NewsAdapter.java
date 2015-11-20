@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.chenjiayao.zhihudaily.R;
 import com.chenjiayao.zhihudaily.model.LatestNews;
+import com.chenjiayao.zhihudaily.model.StoriesEntity;
 import com.chenjiayao.zhihudaily.ui.autoScrollViewPager;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -30,7 +31,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
     private Context context;
     private LayoutInflater inflater;
-    private List<LatestNews.StoriesEntity> stories;
+    private List<StoriesEntity> stories;
     private List<LatestNews.TopStoriesEntity> topStoriesEntities;
 
     FragmentManager manager;
@@ -38,16 +39,26 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     ImageLoader imageLoader;
     DisplayImageOptions options;
 
+    String lastDate;
+
 
     public onViewPagerItemClickListener viewPagerItemClickListener;
     public onRecyclerViewItemListener recyclerViewItemListener;
+
+    String date;
+
+    public void addList(List<StoriesEntity> s) {
+        int size = stories.size();
+        stories.addAll(size, s);
+        notifyItemRangeInserted(size, s.size());
+    }
 
     public interface onViewPagerItemClickListener {
         void onPageItemClick(View view, LatestNews.TopStoriesEntity entity);
     }
 
     public interface onRecyclerViewItemListener {
-        void onClick(View view, LatestNews.StoriesEntity storiesEntity);
+        void onClick(View view, StoriesEntity storiesEntity);
     }
 
 
@@ -104,7 +115,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
      *
      * @param s
      */
-    public void setStoriesList(List<LatestNews.StoriesEntity> s) {
+    public void setStoriesList(List<StoriesEntity> s) {
         stories.clear();
         this.stories.addAll(s);
         notifyDataSetChanged();
@@ -113,10 +124,6 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     public void setTopStoriesList(List<LatestNews.TopStoriesEntity> s) {
         topStoriesEntities.clear();
         topStoriesEntities.addAll(s);
-        for (LatestNews.TopStoriesEntity en :
-                topStoriesEntities) {
-            Log.i("TAG", en.getTitle());
-        }
         notifyDataSetChanged();
     }
 
@@ -138,12 +145,19 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             HeadViewHolder viewHolder = (HeadViewHolder) holder;
             viewHolder.pager.setTopStoriesEntities(topStoriesEntities);
             viewHolder.pager.setListener(this);
+            lastDate = stories.get(0).getDate();
         } else {
             BodyViewHolder viewHolder = (BodyViewHolder) holder;
             viewHolder.title.setText(stories.get(position).getTitle());
             imageLoader.displayImage(stories.get(position).getImages().get(0), viewHolder.picture, options);
-
             viewHolder.itemView.setTag(position);
+            if (lastDate.equals(stories.get(position).getDate())) {
+                viewHolder.tvTime.setVisibility(View.GONE);
+            } else {
+                viewHolder.tvTime.setVisibility(View.VISIBLE);
+                viewHolder.tvTime.setText(stories.get(position).getDate());
+                lastDate = stories.get(position).getDate();
+            }
             viewHolder.itemView.setOnClickListener(this);
         }
     }
@@ -165,6 +179,8 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         TextView title;
         @Bind(R.id.iv_picture)
         ImageView picture;
+        @Bind(R.id.item_time)
+        TextView tvTime;
 
 
         public BodyViewHolder(View itemView) {
@@ -184,4 +200,5 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             ButterKnife.bind(this, itemView);
         }
     }
+
 }
