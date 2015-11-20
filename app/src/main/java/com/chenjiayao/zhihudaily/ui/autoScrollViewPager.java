@@ -268,7 +268,6 @@ public class autoScrollViewPager extends FrameLayout
 
     @Override
     public void onPageSelected(int position) {
-        Log.i("TAG", "pos = " + position);
         for (int i = 0; i < dots.size(); i++) {
             if (i == position - 1) {
                 dots.get(i).setImageResource(R.drawable.dot_focus);

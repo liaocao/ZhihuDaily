@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -15,6 +14,7 @@ import com.chenjiayao.zhihudaily.model.Content;
 import com.chenjiayao.zhihudaily.model.LatestNews;
 import com.chenjiayao.zhihudaily.mvp.presenter.LatestContentPresenter;
 import com.chenjiayao.zhihudaily.mvp.view.LatestContentView;
+import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -34,57 +34,81 @@ public class LatestContentActivity extends BaseActivity implements LatestContent
     @Bind(R.id.collapsing_toolbar)
     CollapsingToolbarLayout mCollapsingToolbarLayout;
 
-    @Bind(R.id.iv_picture)
+    @Bind(R.id.iv_content_picture)
     ImageView ivPicture;
 
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
+
     private LatestNews.StoriesEntity entity;
 
     LatestContentPresenter mPresenter;
-    private Content content;
+    private ImageLoader imageLoader;
+    private DisplayImageOptions options;
+    private Content content = new Content();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mAppBarLayout.setVisibility(View.INVISIBLE);
+        mPresenter = new LatestContentPresenter(this, this);
 
         entity = (LatestNews.StoriesEntity) getIntent().getSerializableExtra("entity");
 
-        mPresenter = new LatestContentPresenter(this, this);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
 
         mCollapsingToolbarLayout.setTitle(entity.getTitle());
         mCollapsingToolbarLayout.setContentScrimColor(getResources().getColor(R.color.colorPrimary));
         mCollapsingToolbarLayout.setStatusBarScrimColor(getResources().getColor(R.color.colorPrimaryDark));
 
 
-        mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        initWebView();
 
-        mWebView.getSettings().setDomStorageEnabled(true);
-
-        mWebView.getSettings().setDatabaseEnabled(true);
-
-        mWebView.getSettings().setAppCacheEnabled(true);
-
-        content = mPresenter.getContent(entity.getId());
-
-        ImageLoader imageLoader = ImageLoader.getInstance();
-        DisplayImageOptions options = new DisplayImageOptions.Builder()
+        imageLoader = ImageLoader.getInstance();
+        options = new DisplayImageOptions.Builder()
                 .cacheOnDisk(true)
                 .cacheInMemory(true)
                 .build();
-        Log.i("TAG", content.getImage());
-        if (content != null) {
-            imageLoader.displayImage(content.getImage(), ivPicture, options);
-        }
 
+
+        mPresenter.getJson(entity.getId());
+    }
+
+    private void initWebView() {
+        mWebView.getSettings().setJavaScriptEnabled(true);
+        mWebView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        // 开启DOM storage API 功能
+        mWebView.getSettings().setDomStorageEnabled(true);
+        // 开启database storage API功能
+        mWebView.getSettings().setDatabaseEnabled(true);
+        // 开启Application Cache功能
+        mWebView.getSettings().setAppCacheEnabled(true);
     }
 
 
     @Override
     protected int getContentLayout() {
         return R.layout.activity_content;
+    }
+
+    @Override
+    public void showContent(String responseString) {
+        Gson gson = new Gson();
+        content = gson.fromJson(responseString, Content.class);
+        imageLoader.displayImage(content.getImage(), ivPicture, options);
+
+        String css = "<link rel=\"stylesheet\" href=\"file:///android_asset/css/news.css\" type=\"text/css\">";
+        String html = "<html><head>" + css + "</head><body>" + content.getBody() + "</body></html>";
+        html = html.replace("<div class=\"img-place-holder\">", "");
+        mWebView.loadDataWithBaseURL("x-data://base", html, "text/html", "UTF-8", null);
     }
 }

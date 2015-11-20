@@ -177,6 +177,20 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
             }
         });
 
+        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+
+            
+        });
+
 
         //menuRecyclerView
         MenuAdapter menuAdapter = new MenuAdapter(MainActivity.this);
