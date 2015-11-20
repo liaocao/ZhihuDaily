@@ -3,6 +3,7 @@ package com.chenjiayao.zhihudaily.adapter;
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -112,6 +113,10 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     public void setTopStoriesList(List<LatestNews.TopStoriesEntity> s) {
         topStoriesEntities.clear();
         topStoriesEntities.addAll(s);
+        for (LatestNews.TopStoriesEntity en :
+                topStoriesEntities) {
+            Log.i("TAG", en.getTitle());
+        }
         notifyDataSetChanged();
     }
 

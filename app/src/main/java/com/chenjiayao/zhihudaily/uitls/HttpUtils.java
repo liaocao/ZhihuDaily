@@ -18,6 +18,7 @@ public class HttpUtils {
 
     //去看看知乎的APi就知道了.
     public static void get(String url, ResponseHandlerInterface responseHandler) {
+        Log.i("TAG", constant.START_URL + url);
         client.get(constant.START_URL + url, responseHandler);
 
     }
@@ -32,7 +33,7 @@ public class HttpUtils {
                 context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo info = systemService.getActiveNetworkInfo();
-        if(null != info){
+        if (null != info) {
             return info.isAvailable();
         }
         return false;

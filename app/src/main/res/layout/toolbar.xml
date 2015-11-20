@@ -2,7 +2,6 @@
 
 
 <android.support.v7.widget.Toolbar
-    android:fitsSystemWindows="true"
     android:id="@+id/toolbar"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"

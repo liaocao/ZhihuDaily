@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +46,7 @@ public class autoScrollViewPager extends FrameLayout
     /**
      * 用来填充一个title和imageview的view
      */
-    List<View> views;
+    List<View> newsViews;
 
     /**
      * 用来存放每一个指示器
@@ -98,24 +99,28 @@ public class autoScrollViewPager extends FrameLayout
                 .build();
         this.context = context;
 
+        Log.i("TAG", "构造函数");
         initView();
 
     }
 
     private void initView() {
-        views = new ArrayList<>();
+        newsViews = new ArrayList<>();
         dots = new ArrayList<>();
 
-        delayTime = 2000;
+        delayTime = 3000;
     }
 
     public void setTopStoriesEntities(List<LatestNews.TopStoriesEntity> list) {
         this.topStoriesEntities = list;
+        if (task != null) {
+            handler.removeCallbacks(task);
+        }
         reset();
     }
 
     private void reset() {
-        views.clear();
+        newsViews.clear();
         initUI();
     }
 
@@ -125,7 +130,8 @@ public class autoScrollViewPager extends FrameLayout
          * 填充指示器
          */
         View view = LayoutInflater.from(context).inflate(R.layout.dot_layout, this, true);
-//        ButterKnife.bind(view, this);
+
+//        ButterKnife.bind(view, this); I dont't clear why it can't work
 
         viewPager = (ViewPager) view.findViewById(R.id.vp);
         inflateDot = (LinearLayout) view.findViewById(R.id.ll_dot);
@@ -154,18 +160,25 @@ public class autoScrollViewPager extends FrameLayout
 //            ButterKnife.bind(fragmentView, this);
             tvTitle = (TextView) fragmentView.findViewById(R.id.item_top_title);
             ivPicture = (ImageView) fragmentView.findViewById(R.id.item_top_picture);
-            if (len + 1 == i) {
-                imageLoader.displayImage(topStoriesEntities.get(0).getImage(), ivPicture, options);
-                tvTitle.setText(topStoriesEntities.get(0).getTitle());
-            } else if (0 == i) {
+
+            /**
+             * if len = 5,then do seven times,create seven fragmentViews
+             *  0  1  2  3  4  5  6
+             *  4  0  1  2  3  4  0
+             */
+            if (0 == i) {
                 imageLoader.displayImage(topStoriesEntities.get(len - 1).getImage(), ivPicture, options);
                 tvTitle.setText(topStoriesEntities.get(len - 1).getTitle());
+            } else if (len + 1 == i) {
+                imageLoader.displayImage(topStoriesEntities.get(0).getImage(), ivPicture, options);
+                tvTitle.setText(topStoriesEntities.get(0).getTitle());
             } else {
                 imageLoader.displayImage(topStoriesEntities.get(i - 1).getImage(), ivPicture, options);
                 tvTitle.setText(topStoriesEntities.get(i - 1).getTitle());
             }
             //填充了 len + 1个图片
-            views.add(fragmentView);
+
+            newsViews.add(fragmentView);
             fragmentView.setOnClickListener(this);
 
         }
@@ -177,22 +190,13 @@ public class autoScrollViewPager extends FrameLayout
         startPlay();
     }
 
-    /**
-     * 每个页面的点击事件
-     *
-     * @param v
-     */
-    @Override
-    public void onClick(View v) {
-        if (listener != null && viewPager.getCurrentItem() >= 0) {
-            LatestNews.TopStoriesEntity entity = topStoriesEntities.get(viewPager.getCurrentItem() - 1);
-            listener.onItemClick(v, entity);
-        }
-    }
 
     private void startPlay() {
-        handler.postDelayed(task, 3000);
+
+        isAutoPlay = true;
+        handler.postDelayed(task, delayTime);
     }
+
 
     //轮播核心代码
     private final Runnable task = new Runnable() {
@@ -206,7 +210,7 @@ public class autoScrollViewPager extends FrameLayout
                     handler.post(task);
                 } else {
                     viewPager.setCurrentItem(currentItme);
-                    handler.postDelayed(task, 5000);
+                    handler.postDelayed(task, delayTime);
                 }
             } else {
                 handler.postDelayed(task, 5000);
@@ -215,26 +219,37 @@ public class autoScrollViewPager extends FrameLayout
     };
 
 
+    /**
+     * 每个页面的点击事件
+     *
+     * @param v
+     */
+    @Override
+    public void onClick(View v) {
+        if (listener != null) {
+            LatestNews.TopStoriesEntity entity = topStoriesEntities.get(viewPager.getCurrentItem() - 1);
+            listener.onItemClick(v, entity);
+        }
+    }
+
     //////////////////////////////////////////////////////////////
     //viewPager的adapter
     class MyPagerAdapter extends PagerAdapter {
 
         @Override
         public int getCount() {
-
-            return views.size();
+            return newsViews.size();
         }
 
         @Override
         public boolean isViewFromObject(View view, Object object) {
-
             return view == object;
         }
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            container.addView(views.get(position));
-            return views.get(position);
+            container.addView(newsViews.get(position));
+            return newsViews.get(position);
         }
 
         @Override
@@ -253,6 +268,7 @@ public class autoScrollViewPager extends FrameLayout
 
     @Override
     public void onPageSelected(int position) {
+        Log.i("TAG", "pos = " + position);
         for (int i = 0; i < dots.size(); i++) {
             if (i == position - 1) {
                 dots.get(i).setImageResource(R.drawable.dot_focus);

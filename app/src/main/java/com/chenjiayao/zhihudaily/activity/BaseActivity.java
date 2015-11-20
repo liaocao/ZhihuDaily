@@ -1,8 +1,12 @@
 package com.chenjiayao.zhihudaily.activity;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+
+import com.chenjiayao.zhihudaily.R;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import butterknife.ButterKnife;
 
@@ -19,13 +23,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         initStatusBar();
     }
 
-    private void initStatusBar() {
-//        if (Build.VERSION_CODES.KITKAT == Build.VERSION.SDK_INT) {
-//            SystemBarTintManager manager = new SystemBarTintManager(this);
-//            manager.setStatusBarTintEnabled(true);
-//            manager.setNavigationBarTintEnabled(true);
-//            manager.setStatusBarTintResource(R.color.colorPrimaryDark);
-//        }
+    protected void initStatusBar() {
+        if (Build.VERSION_CODES.KITKAT == Build.VERSION.SDK_INT) {
+            SystemBarTintManager manager = new SystemBarTintManager(this);
+            manager.setStatusBarTintEnabled(true);
+            manager.setNavigationBarTintEnabled(true);
+            manager.setStatusBarTintResource(R.color.colorPrimaryDark);
+        }
     }
 
 

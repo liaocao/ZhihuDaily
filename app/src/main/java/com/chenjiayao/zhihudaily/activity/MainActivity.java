@@ -22,6 +22,9 @@ import com.chenjiayao.zhihudaily.mvp.presenter.MainPresenter;
 import com.chenjiayao.zhihudaily.mvp.view.MainView;
 import com.chenjiayao.zhihudaily.uitls.ToolbarUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.Bind;
 
 public class MainActivity extends BaseActivity implements MainView, SwipeRefreshLayout.OnRefreshListener {
@@ -143,9 +146,16 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
         adapter.setListener(new NewsAdapter.onViewPagerItemClickListener() {
             @Override
             public void onPageItemClick(View view, LatestNews.TopStoriesEntity entity) {
-                Toast.makeText(MainActivity.this, entity.getTitle(), Toast.LENGTH_SHORT).show();
+                LatestNews.StoriesEntity storiesEntity = new LatestNews.StoriesEntity();
+                storiesEntity.setId(entity.getId());
+                storiesEntity.setTitle(entity.getTitle());
+                List<String> images = new ArrayList<String>();
+                images.add(entity.getImage());
+                storiesEntity.setImages(images);
 
-
+                Intent intent = new Intent(MainActivity.this, LatestContentActivity.class);
+                intent.putExtra("entity", storiesEntity);
+                startActivity(intent);
             }
         });
 
@@ -154,8 +164,6 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
             @Override
             public void onClick(View view, LatestNews.StoriesEntity entity) {
                 //每个Item的点击事件
-                Toast.makeText(MainActivity.this, entity.getTitle(), Toast.LENGTH_SHORT).show();
-
                 LatestNews.StoriesEntity storiesEntity = new LatestNews.StoriesEntity();
                 storiesEntity.setImages(entity.getImages());
                 storiesEntity.setId(entity.getId());

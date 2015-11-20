@@ -1,7 +1,10 @@
 package com.chenjiayao.zhihudaily.mvp.presenter;
 
 import android.content.Context;
+import android.content.Intent;
 
+import com.chenjiayao.zhihudaily.activity.LatestContentActivity;
+import com.chenjiayao.zhihudaily.activity.MainActivity;
 import com.chenjiayao.zhihudaily.constant;
 import com.chenjiayao.zhihudaily.model.LatestNews;
 import com.chenjiayao.zhihudaily.mvp.view.MainView;
@@ -89,4 +92,8 @@ public class MainPresenter {
         mainView.setList(latestNews);
     }
 
+    public void startContentActivity(LatestNews.TopStoriesEntity entity) {
+
+
+    }
 }
