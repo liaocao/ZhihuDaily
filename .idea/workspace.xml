@@ -6,6 +6,7 @@
     </shared>
   </component>
   <component name="AndroidLogFilters">
+    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="TAG" />
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
@@ -42,47 +43,26 @@
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chenjiayao/zhihudaily/activity/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="220" column="48" selection-start-line="220" selection-start-column="48" selection-end-line="220" selection-end-column="48" />
+              <caret line="170" column="61" selection-start-line="170" selection-start-column="61" selection-end-line="170" selection-end-column="61" />
               <folding>
                 <element signature="method#initDrawerLayout#0;class#MainActivity#0" expanded="false" />
                 <element signature="method#onConfigurationChanged#0;class#MainActivity#0" expanded="false" />
                 <element signature="method#onOptionsItemSelected#0;class#MainActivity#0" expanded="false" />
+                <element signature="e#4914#5808#0" expanded="true" />
+                <element signature="e#5807#5808#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="NewsAdapter.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chenjiayao/zhihudaily/adapter/NewsAdapter.java">
+      <file leaf-file-name="PreUtils.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chenjiayao/zhihudaily/uitls/PreUtils.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.5423729">
-              <caret line="153" column="0" selection-start-line="153" selection-start-column="0" selection-end-line="153" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.77627116">
+              <caret line="42" column="55" selection-start-line="42" selection-start-column="55" selection-end-line="42" selection-end-column="55" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MainPresenter.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chenjiayao/zhihudaily/mvp/presenter/MainPresenter.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="95" column="24" selection-start-line="95" selection-start-column="24" selection-end-line="95" selection-end-column="24" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="item_news.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/item_news.xml">
-          <provider editor-type-id="android-designer">
-            <state />
-          </provider>
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-12.068966">
-              <caret line="18" column="27" selection-start-line="18" selection-start-column="27" selection-end-line="18" selection-end-column="27" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -1600,11 +1580,12 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/chenjiayao/zhihudaily/mvp/view/MainView.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/chenjiayao/zhihudaily/activity/LatestContentActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/item_time.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/item_news.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/chenjiayao/zhihudaily/model/StoriesEntity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/chenjiayao/zhihudaily/mvp/presenter/MainPresenter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/item_news.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/chenjiayao/zhihudaily/activity/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/chenjiayao/zhihudaily/adapter/NewsAdapter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/chenjiayao/zhihudaily/uitls/PreUtils.java" />
       </list>
     </option>
   </component>
@@ -2602,13 +2583,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.loopj.android/android-async-http/1.4.9/5d171c3cd5343e5997f974561abed21442273fd1/android-async-http-1.4.9-sources.jar!/com/loopj/android/http/ResponseHandlerInterface.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33273703">
-          <caret line="29" column="35" selection-start-line="29" selection-start-column="35" selection-end-line="29" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/values/colors.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.27549195">
@@ -2982,29 +2956,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/item_news.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-12.068966">
-          <caret line="18" column="27" selection-start-line="18" selection-start-column="27" selection-end-line="18" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chenjiayao/zhihudaily/activity/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="220" column="48" selection-start-line="220" selection-start-column="48" selection-end-line="220" selection-end-column="48" />
-          <folding>
-            <element signature="method#initDrawerLayout#0;class#MainActivity#0" expanded="false" />
-            <element signature="method#onConfigurationChanged#0;class#MainActivity#0" expanded="false" />
-            <element signature="method#onOptionsItemSelected#0;class#MainActivity#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chenjiayao/zhihudaily/model/StoriesEntity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.049717516">
@@ -3020,18 +2971,61 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/item_news.xml">
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.4602804">
+          <caret line="20" column="36" selection-start-line="20" selection-start-column="36" selection-end-line="20" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://F:/sdk/extras/android/m2repository/com/android/support/recyclerview-v7/23.1.0/recyclerview-v7-23.1.0-sources.jar!/android/support/v7/widget/RecyclerView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-6.0553675">
+          <caret line="8112" column="6" selection-start-line="8112" selection-start-column="6" selection-end-line="8112" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chenjiayao/zhihudaily/mvp/presenter/MainPresenter.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="95" column="24" selection-start-line="95" selection-start-column="24" selection-end-line="95" selection-end-column="24" />
+          <caret line="109" column="0" selection-start-line="109" selection-start-column="0" selection-end-line="109" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chenjiayao/zhihudaily/activity/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="170" column="61" selection-start-line="170" selection-start-column="61" selection-end-line="170" selection-end-column="61" />
+          <folding>
+            <element signature="method#initDrawerLayout#0;class#MainActivity#0" expanded="false" />
+            <element signature="method#onConfigurationChanged#0;class#MainActivity#0" expanded="false" />
+            <element signature="method#onOptionsItemSelected#0;class#MainActivity#0" expanded="false" />
+            <element signature="e#4914#5808#0" expanded="true" />
+            <element signature="e#5807#5808#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chenjiayao/zhihudaily/adapter/NewsAdapter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5423729">
-          <caret line="153" column="0" selection-start-line="153" selection-start-column="0" selection-end-line="153" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="160" column="42" selection-start-line="160" selection-start-column="42" selection-end-line="160" selection-end-column="42" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chenjiayao/zhihudaily/uitls/PreUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.77627116">
+          <caret line="42" column="55" selection-start-line="42" selection-start-column="55" selection-end-line="42" selection-end-column="55" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

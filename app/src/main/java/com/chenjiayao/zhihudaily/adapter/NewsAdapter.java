@@ -14,6 +14,7 @@ import com.chenjiayao.zhihudaily.R;
 import com.chenjiayao.zhihudaily.model.LatestNews;
 import com.chenjiayao.zhihudaily.model.StoriesEntity;
 import com.chenjiayao.zhihudaily.ui.autoScrollViewPager;
+import com.chenjiayao.zhihudaily.uitls.PreUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -41,11 +42,11 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
     String lastDate;
 
-
     public onViewPagerItemClickListener viewPagerItemClickListener;
     public onRecyclerViewItemListener recyclerViewItemListener;
 
-    String date;
+    PreUtils utils;
+
 
     public void addList(List<StoriesEntity> s) {
         int size = stories.size();
@@ -58,7 +59,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     }
 
     public interface onRecyclerViewItemListener {
-        void onClick(View view, StoriesEntity storiesEntity);
+        void onClick(View view, StoriesEntity storiesEntity,int pos);
     }
 
 
@@ -74,7 +75,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         if (recyclerViewItemListener != null) {
             int pos = (int) v.getTag();
             if (0 != pos) {
-                recyclerViewItemListener.onClick(v, stories.get(pos));
+                recyclerViewItemListener.onClick(v, stories.get(pos), pos);
             }
         }
     }
@@ -98,7 +99,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         this.stories = new ArrayList<>();
         this.topStoriesEntities = new ArrayList<>();
         this.manager = manager;
-
+        utils = PreUtils.getInstance(context);
         inflater = LayoutInflater.from(context);
 
         imageLoader = ImageLoader.getInstance();
@@ -148,15 +149,30 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             lastDate = stories.get(0).getDate();
         } else {
             BodyViewHolder viewHolder = (BodyViewHolder) holder;
+
+            if (utils.isClickItem(String.valueOf(position))) {
+                Log.i("TAG", "============================");
+                viewHolder.itemView.setAlpha(0.6f);
+            }else{
+                Log.i("TAG","怎么会是false");
+            }
+
             viewHolder.title.setText(stories.get(position).getTitle());
             imageLoader.displayImage(stories.get(position).getImages().get(0), viewHolder.picture, options);
             viewHolder.itemView.setTag(position);
-            if (lastDate.equals(stories.get(position).getDate())) {
-                viewHolder.tvTime.setVisibility(View.GONE);
-            } else {
+
+            if (position == 1) {
                 viewHolder.tvTime.setVisibility(View.VISIBLE);
-                viewHolder.tvTime.setText(stories.get(position).getDate());
-                lastDate = stories.get(position).getDate();
+                viewHolder.tvTime.setText("今日热闻");
+            } else {
+                if (lastDate.equals(stories.get(position).getDate())) {
+
+                    viewHolder.tvTime.setVisibility(View.GONE);
+                } else {
+                    viewHolder.tvTime.setVisibility(View.VISIBLE);
+                    viewHolder.tvTime.setText(stories.get(position).getDate());
+                    lastDate = stories.get(position).getDate();
+                }
             }
             viewHolder.itemView.setOnClickListener(this);
         }
@@ -173,7 +189,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         return position == 0 ? ITEM_TYPE_HEADER : ITEM_TYPE_ITEM;
     }
 
-    public class BodyViewHolder extends RecyclerView.ViewHolder {
+    public static class BodyViewHolder extends RecyclerView.ViewHolder {
 
         @Bind(R.id.tv_title)
         TextView title;
@@ -186,6 +202,9 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         public BodyViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+
+        public static void set(int pos) {
         }
     }
 

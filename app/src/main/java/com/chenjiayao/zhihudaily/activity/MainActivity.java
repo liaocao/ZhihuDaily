@@ -21,6 +21,7 @@ import com.chenjiayao.zhihudaily.model.LatestNews;
 import com.chenjiayao.zhihudaily.model.StoriesEntity;
 import com.chenjiayao.zhihudaily.mvp.presenter.MainPresenter;
 import com.chenjiayao.zhihudaily.mvp.view.MainView;
+import com.chenjiayao.zhihudaily.uitls.PreUtils;
 import com.chenjiayao.zhihudaily.uitls.ToolbarUtils;
 
 import java.util.ArrayList;
@@ -163,8 +164,12 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
         //列表新闻的点击事件
         adapter.setListener(new NewsAdapter.onRecyclerViewItemListener() {
             @Override
-            public void onClick(View view, StoriesEntity entity) {
+            public void onClick(View view, StoriesEntity entity, int pos) {
                 //每个Item的点击事件
+
+                PreUtils utils = PreUtils.getInstance(MainActivity.this);
+                utils.saveClickItem(String.valueOf(pos), true);
+
                 StoriesEntity storiesEntity = new StoriesEntity();
                 storiesEntity.setImages(entity.getImages());
                 storiesEntity.setId(entity.getId());
