@@ -3,7 +3,6 @@ package com.chenjiayao.zhihudaily.adapter;
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,7 +58,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     }
 
     public interface onRecyclerViewItemListener {
-        void onClick(View view, StoriesEntity storiesEntity,int pos);
+        void onClick(View view, StoriesEntity storiesEntity, int pos);
     }
 
 
@@ -150,11 +149,10 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         } else {
             BodyViewHolder viewHolder = (BodyViewHolder) holder;
 
-            if (utils.isClickItem(String.valueOf(position))) {
-                Log.i("TAG", "============================");
-                viewHolder.itemView.setAlpha(0.6f);
-            }else{
-                Log.i("TAG","怎么会是false");
+            if (utils.isClickItem(String.valueOf(stories.get(position).getId()))) {
+                viewHolder.title.setTextColor(context.getResources().getColor(R.color.clicked_tv_textcolor));
+            } else {
+                viewHolder.title.setTextColor(context.getResources().getColor(R.color.textColor));
             }
 
             viewHolder.title.setText(stories.get(position).getTitle());

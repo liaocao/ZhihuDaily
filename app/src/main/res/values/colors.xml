@@ -8,4 +8,6 @@
     <color name="textColor">#796E84</color>
     <color name="news_item">#FFF0F0F0</color>
     <color name="clickColor">#EFBDB6</color>
+
+    <color name="clicked_tv_textcolor">@android:color/darker_gray</color>
 </resources>

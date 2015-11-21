@@ -12,7 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.chenjiayao.zhihudaily.R;
 import com.chenjiayao.zhihudaily.adapter.MenuAdapter;
@@ -155,6 +154,9 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
                 images.add(entity.getImage());
                 storiesEntity.setImages(images);
 
+                PreUtils utils = PreUtils.getInstance(MainActivity.this);
+                utils.saveClickItem(String.valueOf(entity.getId()), true);
+
                 Intent intent = new Intent(MainActivity.this, LatestContentActivity.class);
                 intent.putExtra("entity", storiesEntity);
                 startActivity(intent);
@@ -168,7 +170,7 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
                 //每个Item的点击事件
 
                 PreUtils utils = PreUtils.getInstance(MainActivity.this);
-                utils.saveClickItem(String.valueOf(pos), true);
+                utils.saveClickItem(String.valueOf(entity.getId()), true);
 
                 StoriesEntity storiesEntity = new StoriesEntity();
                 storiesEntity.setImages(entity.getImages());
@@ -202,8 +204,6 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
                     mMainPresenter.loadMore();
                 }
             }
-
-
         });
 
 
@@ -216,7 +216,6 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
         menuAdapter.setListener(new MenuAdapter.onClickListener() {
             @Override
             public void onClick(View v, int pos) {
-                Toast.makeText(MainActivity.this, "pos = " + pos, Toast.LENGTH_SHORT).show();
                 mDrawerLayout.closeDrawers();
             }
         });
