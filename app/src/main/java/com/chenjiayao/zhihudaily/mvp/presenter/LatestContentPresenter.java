@@ -1,8 +1,9 @@
 package com.chenjiayao.zhihudaily.mvp.presenter;
 
 import android.content.Context;
+import android.util.Log;
 
-import com.chenjiayao.zhihudaily.model.Content;
+import com.chenjiayao.zhihudaily.constant;
 import com.chenjiayao.zhihudaily.mvp.view.LatestContentView;
 import com.chenjiayao.zhihudaily.uitls.HttpUtils;
 import com.loopj.android.http.TextHttpResponseHandler;
@@ -16,7 +17,6 @@ public class LatestContentPresenter {
 
     LatestContentView mLatestContentView;
     Context mContext;
-    private Content content;
 
     public LatestContentPresenter(LatestContentView mLatestContentView, Context context) {
         this.mLatestContentView = mLatestContentView;
@@ -24,7 +24,7 @@ public class LatestContentPresenter {
     }
 
 
-    public void getJson(int id) {
+    public void getJson(final int id) {
         if (HttpUtils.isNetworkConnected(mContext)) {
             HttpUtils.get("news/" + id, new TextHttpResponseHandler() {
                 @Override

@@ -2,7 +2,6 @@ package com.chenjiayao.zhihudaily.mvp.presenter;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 
 import com.chenjiayao.zhihudaily.constant;
 import com.chenjiayao.zhihudaily.model.LatestNews;

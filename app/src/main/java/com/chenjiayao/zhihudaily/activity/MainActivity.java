@@ -152,9 +152,15 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
      */
     @Override
     public void onRefresh() {
-        if (refreshLayout.isRefreshing()) {
-            refreshLayout.setRefreshing(true);
-            mMainPresenter.loadFirst();
+        if (0 == flag) {
+            if (refreshLayout.isRefreshing()) {
+                refreshLayout.setRefreshing(true);
+
+                mMainPresenter.loadFirst();
+
+            }
+        } else {
+            refreshLayout.setRefreshing(false);
         }
     }
 
@@ -189,7 +195,10 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
         themeNewsAdapter.setListener(new BaseAdapter.onRecyclerViewItemListener() {
             @Override
             public void onClick(View view, StoriesEntity storiesEntity, int pos) {
-                
+                Intent intent = new Intent(MainActivity.this, LatestContentActivity.class);
+                intent.putExtra("entity", storiesEntity);
+                startActivity(intent);
+                //我懒得处理了.
             }
         });
 
