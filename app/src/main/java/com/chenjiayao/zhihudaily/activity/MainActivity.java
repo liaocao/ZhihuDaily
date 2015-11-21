@@ -27,6 +27,8 @@ import com.chenjiayao.zhihudaily.mvp.presenter.MainPresenter;
 import com.chenjiayao.zhihudaily.mvp.view.MainView;
 import com.chenjiayao.zhihudaily.uitls.PreUtils;
 import com.chenjiayao.zhihudaily.uitls.ToolbarUtils;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +69,12 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
      * 1 代表主题
      */
     int flag = 0;
+    private MenuItem item;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +101,9 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
             }
         });
 
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
 
@@ -240,6 +251,7 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
                 Intent intent = new Intent(MainActivity.this, LatestContentActivity.class);
                 intent.putExtra("entity", storiesEntity);
                 startActivity(intent);
+                newsAdapter.notifyDataSetChanged();
             }
         });
 

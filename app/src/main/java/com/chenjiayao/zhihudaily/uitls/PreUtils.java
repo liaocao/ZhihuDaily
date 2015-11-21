@@ -38,4 +38,13 @@ public class PreUtils {
     public boolean isClickItem(String key) {
         return mSharedPreferences.getBoolean(key, false);
     }
+
+    public boolean isLight(String key) {
+        return mSharedPreferences.getBoolean(key, true);
+    }
+
+    public void saveTheme(String key, boolean value) {
+        editor.putBoolean(key, value);
+        editor.commit();
+    }
 }

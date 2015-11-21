@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import com.chenjiayao.zhihudaily.Animate;
 import com.chenjiayao.zhihudaily.R;
 import com.chenjiayao.zhihudaily.constant;
 import com.chenjiayao.zhihudaily.uitls.HttpUtils;
@@ -45,11 +46,6 @@ public class SplashActivity extends BaseActivity {
         initImage();
     }
 
-
-    @Override
-    protected void initStatusBar() {
-
-    }
 
     private void initImage() {
 

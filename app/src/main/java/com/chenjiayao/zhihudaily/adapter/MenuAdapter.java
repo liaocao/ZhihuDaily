@@ -1,7 +1,6 @@
 package com.chenjiayao.zhihudaily.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +26,6 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
 
     List<Theme> items;
 
-    View lastClickItem = null;
 
     public interface onClickListener {
         void onClick(View v, int pos);
@@ -58,10 +56,6 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
         holder.itemView.setTag(position);
         holder.itemView.setOnClickListener(this);
 
-        if (0 == position) {
-            lastClickItem = holder.itemView;
-            holder.itemView.setBackgroundResource(R.color.clickColor);
-        }
     }
 
     @Override
@@ -83,13 +77,8 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
     @Override
     public void onClick(View v) {
         if (null != listener) {
-            if (lastClickItem != v) {
-                int pos = (int) v.getTag();
-                lastClickItem.setBackgroundColor(Color.WHITE);
-                v.setBackgroundResource(R.color.clickColor);
-                lastClickItem = v;
-                listener.onClick(v, pos);
-            }
+            int pos = (int) v.getTag();
+            listener.onClick(v, pos);
         }
     }
 }

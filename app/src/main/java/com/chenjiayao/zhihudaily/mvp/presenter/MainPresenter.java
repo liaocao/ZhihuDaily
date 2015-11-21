@@ -127,28 +127,30 @@ public class MainPresenter {
         int totalItemCount = manager.getItemCount();
         int first = manager.findFirstVisibleItemPosition();
 
-        if (first + visibleItemCount >= totalItemCount && !isLoadingMore) {
-            //可以加载更多
-            isLoadingMore = true;
+        if (HttpUtils.isNetworkConnected(context)) {
+            if (first + visibleItemCount >= totalItemCount && !isLoadingMore) {
+                //可以加载更多
+                isLoadingMore = true;
 
-            //加载首页往期内容
-            if (0 == flag) {
-                HttpUtils.get(constant.BEFORE_URL + date, new TextHttpResponseHandler() {
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                //加载首页往期内容
+                if (0 == flag) {
+                    HttpUtils.get(constant.BEFORE_URL + date, new TextHttpResponseHandler() {
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
 
-                    }
+                        }
 
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                        isLoadingMore = false;
-                        parseBeforeResponseString(responseString);
-                    }
-                });
-                //加载主题日报往期内容
-            } else {
-                //由于没有提供API,,,,所以这个功能就不能实现了/
-                isLoadingMore = false;
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                            isLoadingMore = false;
+                            parseBeforeResponseString(responseString);
+                        }
+                    });
+                    //加载主题日报往期内容
+                } else {
+                    //由于没有提供API,,,,所以这个功能就不能实现了/
+                    isLoadingMore = false;
+                }
             }
         }
     }
@@ -205,6 +207,8 @@ public class MainPresenter {
 
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, String responseString) {
+
+                    //离线缓存
                     parseThemeResponse(responseString);
                 }
             });
