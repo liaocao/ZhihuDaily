@@ -10,23 +10,33 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.chenjiayao.zhihudaily.R;
 import com.chenjiayao.zhihudaily.adapter.MenuAdapter;
 import com.chenjiayao.zhihudaily.adapter.NewsAdapter;
+import com.chenjiayao.zhihudaily.constant;
 import com.chenjiayao.zhihudaily.model.LatestNews;
 import com.chenjiayao.zhihudaily.model.StoriesEntity;
+import com.chenjiayao.zhihudaily.model.Theme;
 import com.chenjiayao.zhihudaily.mvp.presenter.MainPresenter;
 import com.chenjiayao.zhihudaily.mvp.view.MainView;
+import com.chenjiayao.zhihudaily.uitls.HttpUtils;
 import com.chenjiayao.zhihudaily.uitls.PreUtils;
 import com.chenjiayao.zhihudaily.uitls.ToolbarUtils;
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import cz.msebera.android.httpclient.Header;
 
 public class MainActivity extends BaseActivity implements MainView, SwipeRefreshLayout.OnRefreshListener {
 
@@ -48,7 +58,10 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
     MainPresenter mMainPresenter;
     private ActionBarDrawerToggle toggle;
 
-    NewsAdapter adapter;
+    NewsAdapter newsAdapter;
+    MenuAdapter menuAdapter;
+
+    List<Theme> menuItems;
 
 
     @Override
@@ -57,6 +70,8 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
 
         mMainPresenter = new MainPresenter(this, this);
         mMainPresenter.load();
+
+        menuItems = new ArrayList<>();
 
         ToolbarUtils.initToolbar(this, mToolbar, "首页");
         initRecyclerView();
@@ -137,14 +152,14 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
 
     public void initRecyclerView() {
 
-        adapter = new NewsAdapter(MainActivity.this, getSupportFragmentManager());
-        mRecyclerView.setAdapter(adapter);
+        newsAdapter = new NewsAdapter(MainActivity.this, getSupportFragmentManager());
+        mRecyclerView.setAdapter(newsAdapter);
         final LinearLayoutManager manager = new LinearLayoutManager(MainActivity.this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         //top新闻的点击事件
-        adapter.setListener(new NewsAdapter.onViewPagerItemClickListener() {
+        newsAdapter.setListener(new NewsAdapter.onViewPagerItemClickListener() {
             @Override
             public void onPageItemClick(View view, LatestNews.TopStoriesEntity entity) {
                 StoriesEntity storiesEntity = new StoriesEntity();
@@ -164,7 +179,7 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
         });
 
         //列表新闻的点击事件
-        adapter.setListener(new NewsAdapter.onRecyclerViewItemListener() {
+        newsAdapter.setListener(new NewsAdapter.onRecyclerViewItemListener() {
             @Override
             public void onClick(View view, StoriesEntity entity, int pos) {
                 //每个Item的点击事件
@@ -207,18 +222,57 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
         });
 
 
+        if (HttpUtils.isNetworkConnected(MainActivity.this)) {
+            HttpUtils.get(constant.THEME, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    super.onSuccess(statusCode, headers, response);
+                    parseJson(response);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    super.onFailure(statusCode, headers, responseString, throwable);
+                }
+            });
+        }
+
+
         //menuRecyclerView
-        MenuAdapter menuAdapter = new MenuAdapter(MainActivity.this);
-        menuRecyclerView.setAdapter(menuAdapter);
         menuRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.VERTICAL, false));
         menuRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        menuAdapter.setListener(new MenuAdapter.onClickListener() {
-            @Override
-            public void onClick(View v, int pos) {
-                mDrawerLayout.closeDrawers();
+
+    }
+
+    /**
+     * 解析主题日报的json格式
+     *
+     * @param json
+     */
+    private void parseJson(JSONObject json) {
+        try {
+            Log.i("TAG", json.toString());
+            JSONArray itemArray = json.getJSONArray("others");
+            for (int i = 0; i < itemArray.length(); i++) {
+                Theme theme = new Theme();
+                JSONObject item = itemArray.getJSONObject(i);
+                theme.setId(item.getString("id"));
+                theme.setName(item.getString("name"));
+                menuItems.add(theme);
             }
-        });
+            menuAdapter = new MenuAdapter(MainActivity.this, menuItems);
+            menuAdapter.setListener(new MenuAdapter.onClickListener() {
+                @Override
+                public void onClick(View v, int pos) {
+                    mDrawerLayout.closeDrawers();
+                    Log.i("TAG", menuItems.get(pos).getName() + "====" + menuItems.get(pos).getId());
+                }
+            });
+            menuRecyclerView.setAdapter(menuAdapter);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -228,12 +282,12 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
                 latestNews.getStories()) {
             entity.setDate(date);
         }
-        adapter.setStoriesList(latestNews.getStories());
-        adapter.setTopStoriesList(latestNews.getTop_stories());
+        newsAdapter.setStoriesList(latestNews.getStories());
+        newsAdapter.setTopStoriesList(latestNews.getTop_stories());
     }
 
     @Override
     public void addToAdapter(List<StoriesEntity> stories) {
-        adapter.addList(stories);
+        newsAdapter.addList(stories);
     }
 }

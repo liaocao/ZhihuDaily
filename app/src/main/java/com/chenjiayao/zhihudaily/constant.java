@@ -11,4 +11,6 @@ public class constant {
     public static final String IMAGE = "start-image/1080*1776";
 
     public static final String NEWS = "news/latest";
+
+    public static final String THEME = "themes";
 }

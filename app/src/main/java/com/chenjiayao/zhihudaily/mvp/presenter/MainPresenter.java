@@ -94,6 +94,12 @@ public class MainPresenter {
         latestNews = gson.fromJson(responseString, LatestNews.class);
         date = latestNews.getDate();
         lastDate = date;
+
+        for (StoriesEntity entity :
+                latestNews.getStories()) {
+            entity.setDate(convertDate(date));
+        }
+
         mainView.setList(latestNews);
     }
 
@@ -124,9 +130,25 @@ public class MainPresenter {
         beforeContent content = gson.fromJson(responseString, com.chenjiayao.zhihudaily.model.beforeContent.class);
         date = content.getDate();
         for (StoriesEntity entity : content.getStories()) {
-            entity.setDate(date);
+            entity.setDate(convertDate(date));
         }
         mainView.addToAdapter(content.getStories());
+    }
+
+    /**
+     * 20151121 ---> 2015年11月21日
+     *
+     * @param date
+     * @return
+     */
+    private String convertDate(String date) {
+        String res = date.substring(0, 4);
+        res += "年";
+        res += date.substring(4, 6);
+        res += "月";
+        res += date.substring(6, 8);
+        res += "日";
+        return res;
     }
 }
 

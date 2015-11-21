@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.chenjiayao.zhihudaily.R;
+import com.chenjiayao.zhihudaily.model.Theme;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -18,11 +21,11 @@ import butterknife.ButterKnife;
  */
 public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder> implements View.OnClickListener {
 
-    String[] items = new String[]{"首页", "用户推荐日报", "互联网安全", "开始游戏", "设计日报"
-            , "音乐日报", "动漫日报"};
 
     LayoutInflater inflater;
     Context context;
+
+    List<Theme> items;
 
     View lastClickItem = null;
 
@@ -36,7 +39,8 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
         this.listener = listener;
     }
 
-    public MenuAdapter(Context context) {
+    public MenuAdapter(Context context, List<Theme> items) {
+        this.items = items;
         this.context = context;
         inflater = LayoutInflater.from(context);
     }
@@ -50,7 +54,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
 
     @Override
     public void onBindViewHolder(MenuAdapter.MenuViewHolder holder, int position) {
-        holder.menu.setText(items[position]);
+        holder.menu.setText(items.get(position).getName());
         holder.itemView.setTag(position);
         holder.itemView.setOnClickListener(this);
 
@@ -62,7 +66,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
 
     @Override
     public int getItemCount() {
-        return items.length;
+        return items.size();
     }
 
     public class MenuViewHolder extends RecyclerView.ViewHolder {

@@ -145,7 +145,6 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             HeadViewHolder viewHolder = (HeadViewHolder) holder;
             viewHolder.pager.setTopStoriesEntities(topStoriesEntities);
             viewHolder.pager.setListener(this);
-            lastDate = stories.get(0).getDate();
         } else {
             BodyViewHolder viewHolder = (BodyViewHolder) holder;
 
@@ -162,6 +161,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             if (position == 1) {
                 viewHolder.tvTime.setVisibility(View.VISIBLE);
                 viewHolder.tvTime.setText("今日热闻");
+                lastDate = stories.get(position).getDate();
             } else {
                 if (lastDate.equals(stories.get(position).getDate())) {
 
