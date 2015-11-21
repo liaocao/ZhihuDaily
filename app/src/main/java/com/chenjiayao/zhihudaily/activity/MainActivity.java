@@ -10,13 +10,13 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.chenjiayao.zhihudaily.R;
 import com.chenjiayao.zhihudaily.adapter.MenuAdapter;
 import com.chenjiayao.zhihudaily.adapter.NewsAdapter;
+import com.chenjiayao.zhihudaily.adapter.ThemeNewsAdapter;
 import com.chenjiayao.zhihudaily.constant;
 import com.chenjiayao.zhihudaily.model.LatestNews;
 import com.chenjiayao.zhihudaily.model.StoriesEntity;
@@ -60,6 +60,7 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
 
     NewsAdapter newsAdapter;
     MenuAdapter menuAdapter;
+    ThemeNewsAdapter themeAdapter;
 
     List<Theme> menuItems;
 
@@ -69,7 +70,7 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
         super.onCreate(savedInstanceState);
 
         mMainPresenter = new MainPresenter(this, this);
-        mMainPresenter.load();
+        mMainPresenter.loadFirst();
 
         menuItems = new ArrayList<>();
 
@@ -140,7 +141,7 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
     public void onRefresh() {
         if (refreshLayout.isRefreshing()) {
             refreshLayout.setRefreshing(true);
-            mMainPresenter.load();
+            mMainPresenter.loadFirst();
         }
     }
 
@@ -190,7 +191,6 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
                 StoriesEntity storiesEntity = new StoriesEntity();
                 storiesEntity.setImages(entity.getImages());
                 storiesEntity.setId(entity.getId());
-//                storiesEntity.setGa_prefix(entity.getGa_prefix());
                 storiesEntity.setTitle(entity.getTitle());
                 storiesEntity.setType(entity.getType());
 
@@ -236,14 +236,12 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
                 }
             });
         }
-
-
         //menuRecyclerView
         menuRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.VERTICAL, false));
         menuRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-
     }
+
 
     /**
      * 解析主题日报的json格式
@@ -252,7 +250,6 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
      */
     private void parseJson(JSONObject json) {
         try {
-            Log.i("TAG", json.toString());
             JSONArray itemArray = json.getJSONArray("others");
             for (int i = 0; i < itemArray.length(); i++) {
                 Theme theme = new Theme();
@@ -266,7 +263,7 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
                 @Override
                 public void onClick(View v, int pos) {
                     mDrawerLayout.closeDrawers();
-                    Log.i("TAG", menuItems.get(pos).getName() + "====" + menuItems.get(pos).getId());
+                    mMainPresenter.onClick(menuItems.get(pos).getId());
                 }
             });
             menuRecyclerView.setAdapter(menuAdapter);
@@ -289,5 +286,10 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
     @Override
     public void addToAdapter(List<StoriesEntity> stories) {
         newsAdapter.addList(stories);
+    }
+
+    @Override
+    public void testAdapter(ThemeNewsAdapter adapter) {
+        mRecyclerView.setAdapter(adapter);
     }
 }

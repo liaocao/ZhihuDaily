@@ -92,7 +92,6 @@ public class autoScrollViewPager extends FrameLayout
         super(context, attrs, defStyleAttr);
         topStoriesEntities = new ArrayList<>();
         imageLoader = ImageLoader.getInstance();
-
         options = new DisplayImageOptions.Builder()
                 .cacheOnDisk(true)
                 .cacheInMemory(true)

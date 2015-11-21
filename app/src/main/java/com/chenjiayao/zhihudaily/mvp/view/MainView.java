@@ -1,5 +1,6 @@
 package com.chenjiayao.zhihudaily.mvp.view;
 
+import com.chenjiayao.zhihudaily.adapter.ThemeNewsAdapter;
 import com.chenjiayao.zhihudaily.model.LatestNews;
 import com.chenjiayao.zhihudaily.model.StoriesEntity;
 
@@ -16,4 +17,6 @@ public interface MainView {
     void setList(LatestNews latestNews);
 
     void addToAdapter(List<StoriesEntity> stories);
+
+    void testAdapter(ThemeNewsAdapter adapter);
 }

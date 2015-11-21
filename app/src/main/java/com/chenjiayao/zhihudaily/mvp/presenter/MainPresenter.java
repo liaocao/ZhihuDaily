@@ -1,10 +1,13 @@
 package com.chenjiayao.zhihudaily.mvp.presenter;
 
 import android.content.Context;
+import android.util.Log;
 
+import com.chenjiayao.zhihudaily.adapter.ThemeNewsAdapter;
 import com.chenjiayao.zhihudaily.constant;
 import com.chenjiayao.zhihudaily.model.LatestNews;
 import com.chenjiayao.zhihudaily.model.StoriesEntity;
+import com.chenjiayao.zhihudaily.model.ThemeStories;
 import com.chenjiayao.zhihudaily.model.beforeContent;
 import com.chenjiayao.zhihudaily.mvp.view.MainView;
 import com.chenjiayao.zhihudaily.uitls.HttpUtils;
@@ -51,7 +54,7 @@ public class MainPresenter {
     /**
      * 最开始从服务器上面加载最新的内容.没有加载成功的话就加载在数据库中的缓存
      */
-    public void load() {
+    public void loadFirst() {
         isLoading = true;
         //异步加载文字
         if (HttpUtils.isNetworkConnected(context)) {
@@ -149,6 +152,36 @@ public class MainPresenter {
         res += date.substring(6, 8);
         res += "日";
         return res;
+    }
+
+    public void onClick(String id) {
+        if (HttpUtils.isNetworkConnected(context)) {
+            HttpUtils.get("theme/" + id, new TextHttpResponseHandler() {
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    parseThemeResponse(responseString);
+                }
+            });
+        }
+    }
+
+    /**
+     * 主题日报
+     *
+     * @param responseString
+     */
+    private void parseThemeResponse(String responseString) {
+        Gson gson = new Gson();
+        ThemeStories themeStories = gson.fromJson(responseString, ThemeStories.class);
+
+        ThemeNewsAdapter adapter = new ThemeNewsAdapter(context);
+        adapter.setListStories(themeStories);
+        mainView.testAdapter(adapter);
     }
 }
 

@@ -2,8 +2,6 @@ package com.chenjiayao.zhihudaily.adapter;
 
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -13,10 +11,6 @@ import com.chenjiayao.zhihudaily.R;
 import com.chenjiayao.zhihudaily.model.LatestNews;
 import com.chenjiayao.zhihudaily.model.StoriesEntity;
 import com.chenjiayao.zhihudaily.ui.autoScrollViewPager;
-import com.chenjiayao.zhihudaily.uitls.PreUtils;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,24 +21,17 @@ import butterknife.ButterKnife;
 /**
  * Created by chen on 2015/11/15.
  */
-public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements View.OnClickListener, autoScrollViewPager.OnItemClickListener {
+public class NewsAdapter extends BaseAdapter implements View.OnClickListener, autoScrollViewPager.OnItemClickListener {
 
-    private Context context;
-    private LayoutInflater inflater;
-    private List<StoriesEntity> stories;
     private List<LatestNews.TopStoriesEntity> topStoriesEntities;
+    List<StoriesEntity> stories;
+
 
     FragmentManager manager;
-
-    ImageLoader imageLoader;
-    DisplayImageOptions options;
 
     String lastDate;
 
     public onViewPagerItemClickListener viewPagerItemClickListener;
-    public onRecyclerViewItemListener recyclerViewItemListener;
-
-    PreUtils utils;
 
 
     public void addList(List<StoriesEntity> s) {
@@ -55,10 +42,6 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
     public interface onViewPagerItemClickListener {
         void onPageItemClick(View view, LatestNews.TopStoriesEntity entity);
-    }
-
-    public interface onRecyclerViewItemListener {
-        void onClick(View view, StoriesEntity storiesEntity, int pos);
     }
 
 
@@ -89,37 +72,20 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     }
 
 
-    private static final int ITEM_TYPE_HEADER = 0;
-    private static final int ITEM_TYPE_ITEM = 1;
-
-
     public NewsAdapter(Context context, FragmentManager manager) {
-        this.context = context;
-        this.stories = new ArrayList<>();
+        super(context);
         this.topStoriesEntities = new ArrayList<>();
+        this.stories = new ArrayList<>();
+
         this.manager = manager;
-        utils = PreUtils.getInstance(context);
-        inflater = LayoutInflater.from(context);
-
-        imageLoader = ImageLoader.getInstance();
-        imageLoader.init(ImageLoaderConfiguration.createDefault(context));
-
-        options = new DisplayImageOptions.Builder()
-                .cacheInMemory(true)
-                .cacheOnDisk(true)
-                .build();
     }
 
-    /**
-     * 在这个地方可能 会降低性能
-     *
-     * @param s
-     */
-    public void setStoriesList(List<StoriesEntity> s) {
+    public void setStoriesList(List<StoriesEntity> list) {
         stories.clear();
-        this.stories.addAll(s);
+        stories.addAll(list);
         notifyDataSetChanged();
     }
+
 
     public void setTopStoriesList(List<LatestNews.TopStoriesEntity> s) {
         topStoriesEntities.clear();
@@ -128,7 +94,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = null;
         if (viewType == ITEM_TYPE_HEADER) {
             view = inflater.inflate(R.layout.item_top_news, parent, false);
@@ -140,7 +106,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(BaseViewHolder holder, int position) {
         if (position == 0) {
             HeadViewHolder viewHolder = (HeadViewHolder) holder;
             viewHolder.pager.setTopStoriesEntities(topStoriesEntities);
@@ -148,16 +114,26 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         } else {
             BodyViewHolder viewHolder = (BodyViewHolder) holder;
 
+            //已读处理
             if (utils.isClickItem(String.valueOf(stories.get(position).getId()))) {
                 viewHolder.title.setTextColor(context.getResources().getColor(R.color.clicked_tv_textcolor));
             } else {
                 viewHolder.title.setTextColor(context.getResources().getColor(R.color.textColor));
             }
 
+            //内容
             viewHolder.title.setText(stories.get(position).getTitle());
-            imageLoader.displayImage(stories.get(position).getImages().get(0), viewHolder.picture, options);
+
+            //图片显示,有可能包含没有图片的情况
+            if (stories.get(position).getImages().get(0) == null) {
+                viewHolder.picture.setVisibility(View.GONE);
+            } else {
+                imageLoader.displayImage(stories.get(position).getImages().get(0), viewHolder.picture, options);
+                viewHolder.picture.setVisibility(View.VISIBLE);
+            }
             viewHolder.itemView.setTag(position);
 
+            //时间显示
             if (position == 1) {
                 viewHolder.tvTime.setVisibility(View.VISIBLE);
                 viewHolder.tvTime.setText("今日热闻");
@@ -172,6 +148,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     lastDate = stories.get(position).getDate();
                 }
             }
+            //点击监听函数
             viewHolder.itemView.setOnClickListener(this);
         }
     }
@@ -182,13 +159,8 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         return stories.size();
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        return position == 0 ? ITEM_TYPE_HEADER : ITEM_TYPE_ITEM;
-    }
 
-    public static class BodyViewHolder extends RecyclerView.ViewHolder {
-
+    public class BodyViewHolder extends BaseViewHolder {
         @Bind(R.id.tv_title)
         TextView title;
         @Bind(R.id.iv_picture)
@@ -202,12 +174,10 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             ButterKnife.bind(this, itemView);
         }
 
-        public static void set(int pos) {
-        }
     }
 
 
-    public class HeadViewHolder extends RecyclerView.ViewHolder {
+    public class HeadViewHolder extends BaseViewHolder {
 
         @Bind(R.id.auto_scroll_page)
         autoScrollViewPager pager;
