@@ -1,8 +1,9 @@
 package com.chenjiayao.zhihudaily.mvp.view;
 
-import com.chenjiayao.zhihudaily.adapter.ThemeNewsAdapter;
 import com.chenjiayao.zhihudaily.model.LatestNews;
 import com.chenjiayao.zhihudaily.model.StoriesEntity;
+import com.chenjiayao.zhihudaily.model.Theme;
+import com.chenjiayao.zhihudaily.model.ThemeStories;
 
 import java.util.List;
 
@@ -14,9 +15,12 @@ public interface MainView {
     void isRefreshing(boolean isRefresh);
 
 
-    void setList(LatestNews latestNews);
+    void setNewsAdapterList(LatestNews latestNews);
 
-    void addToAdapter(List<StoriesEntity> stories);
+    void addToNewsAdapter(List<StoriesEntity> stories);
 
-    void testAdapter(ThemeNewsAdapter adapter);
+    void setThemeNewsAdapterList(ThemeStories themeStories);
+
+
+    void setMenuAdapter(List<Theme> menuItems);
 }

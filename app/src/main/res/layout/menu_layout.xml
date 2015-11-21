@@ -20,6 +20,16 @@
             android:textSize="20sp"/>
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/main_page"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@android:color/white"
+        android:clickable="true"
+        android:gravity="center"
+        android:text="首页"
+        android:textSize="20dp"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/menu_recycler_view"
         android:layout_width="match_parent"

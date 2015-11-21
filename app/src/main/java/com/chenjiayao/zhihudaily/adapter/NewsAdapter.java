@@ -34,6 +34,7 @@ public class NewsAdapter extends BaseAdapter implements View.OnClickListener, au
     public onViewPagerItemClickListener viewPagerItemClickListener;
 
 
+    //加载更多时候调用
     public void addList(List<StoriesEntity> s) {
         int size = stories.size();
         stories.addAll(size, s);
@@ -80,6 +81,7 @@ public class NewsAdapter extends BaseAdapter implements View.OnClickListener, au
         this.manager = manager;
     }
 
+    //初次加载调用
     public void setStoriesList(List<StoriesEntity> list) {
         stories.clear();
         stories.addAll(list);

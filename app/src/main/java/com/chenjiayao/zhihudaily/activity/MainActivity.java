@@ -12,31 +12,26 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.chenjiayao.zhihudaily.R;
+import com.chenjiayao.zhihudaily.adapter.BaseAdapter;
 import com.chenjiayao.zhihudaily.adapter.MenuAdapter;
 import com.chenjiayao.zhihudaily.adapter.NewsAdapter;
 import com.chenjiayao.zhihudaily.adapter.ThemeNewsAdapter;
-import com.chenjiayao.zhihudaily.constant;
 import com.chenjiayao.zhihudaily.model.LatestNews;
 import com.chenjiayao.zhihudaily.model.StoriesEntity;
 import com.chenjiayao.zhihudaily.model.Theme;
+import com.chenjiayao.zhihudaily.model.ThemeStories;
 import com.chenjiayao.zhihudaily.mvp.presenter.MainPresenter;
 import com.chenjiayao.zhihudaily.mvp.view.MainView;
-import com.chenjiayao.zhihudaily.uitls.HttpUtils;
 import com.chenjiayao.zhihudaily.uitls.PreUtils;
 import com.chenjiayao.zhihudaily.uitls.ToolbarUtils;
-import com.loopj.android.http.JsonHttpResponseHandler;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
-import cz.msebera.android.httpclient.Header;
 
 public class MainActivity extends BaseActivity implements MainView, SwipeRefreshLayout.OnRefreshListener {
 
@@ -47,7 +42,7 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
     DrawerLayout mDrawerLayout;
 
     @Bind(R.id.recycler_view)
-    RecyclerView mRecyclerView;
+    RecyclerView newsRecyclerView;
 
     @Bind(R.id.menu_recycler_view)
     RecyclerView menuRecyclerView;
@@ -60,10 +55,18 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
 
     NewsAdapter newsAdapter;
     MenuAdapter menuAdapter;
-    ThemeNewsAdapter themeAdapter;
+
+    @Bind(R.id.main_page)
+    TextView mainPage;
 
     List<Theme> menuItems;
+    private ThemeNewsAdapter themeNewsAdapter;
 
+    /**
+     * 0 代表首页
+     * 1 代表主题
+     */
+    int flag = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +82,16 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
 
         initDrawerLayout();
         initSwipeRefresh();
+
+        mainPage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDrawerLayout.closeDrawers();
+                mMainPresenter.toHomePage();
+                mToolbar.setTitle("首页");
+                flag = 0;
+            }
+        });
 
     }
 
@@ -145,19 +158,40 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
         }
     }
 
-
     @Override
     public void isRefreshing(boolean isRefresh) {
         refreshLayout.setRefreshing(isRefresh);
     }
 
-    public void initRecyclerView() {
 
+    public void initRecyclerView() {
+        initNewsRecyclerView();
+        initMenuRecyclerView();
+    }
+
+
+    public void initMenuRecyclerView() {
+        //menuRecyclerView
+        menuRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.VERTICAL, false));
+        menuRecyclerView.setItemAnimator(new DefaultItemAnimator());
+    }
+
+
+    public void initNewsRecyclerView() {
         newsAdapter = new NewsAdapter(MainActivity.this, getSupportFragmentManager());
-        mRecyclerView.setAdapter(newsAdapter);
+        themeNewsAdapter = new ThemeNewsAdapter(MainActivity.this);
+
         final LinearLayoutManager manager = new LinearLayoutManager(MainActivity.this, LinearLayoutManager.VERTICAL, false);
-        mRecyclerView.setLayoutManager(manager);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        newsRecyclerView.setLayoutManager(manager);
+        newsRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+
+        themeNewsAdapter.setListener(new BaseAdapter.onRecyclerViewItemListener() {
+            @Override
+            public void onClick(View view, StoriesEntity storiesEntity, int pos) {
+                
+            }
+        });
 
         //top新闻的点击事件
         newsAdapter.setListener(new NewsAdapter.onViewPagerItemClickListener() {
@@ -200,7 +234,9 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
             }
         });
 
-        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+
+        //上拉加载更多
+        newsRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -209,87 +245,68 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-
-                int visibleItemCount = manager.getChildCount();
-                int totalItemCount = manager.getItemCount();
-                int first = manager.findFirstVisibleItemPosition();
-
-                if (first + visibleItemCount >= totalItemCount) {
-                    //可以加载更多
-                    mMainPresenter.loadMore();
-                }
+                mMainPresenter.loadMore(manager, flag);
             }
         });
 
-
-        if (HttpUtils.isNetworkConnected(MainActivity.this)) {
-            HttpUtils.get(constant.THEME, new JsonHttpResponseHandler() {
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    super.onSuccess(statusCode, headers, response);
-                    parseJson(response);
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    super.onFailure(statusCode, headers, responseString, throwable);
-                }
-            });
-        }
-        //menuRecyclerView
-        menuRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.VERTICAL, false));
-        menuRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mMainPresenter.loadTheme();
 
     }
 
 
     /**
-     * 解析主题日报的json格式
+     * 首次填充adapter
      *
-     * @param json
+     * @param latestNews
      */
-    private void parseJson(JSONObject json) {
-        try {
-            JSONArray itemArray = json.getJSONArray("others");
-            for (int i = 0; i < itemArray.length(); i++) {
-                Theme theme = new Theme();
-                JSONObject item = itemArray.getJSONObject(i);
-                theme.setId(item.getString("id"));
-                theme.setName(item.getString("name"));
-                menuItems.add(theme);
-            }
-            menuAdapter = new MenuAdapter(MainActivity.this, menuItems);
-            menuAdapter.setListener(new MenuAdapter.onClickListener() {
-                @Override
-                public void onClick(View v, int pos) {
-                    mDrawerLayout.closeDrawers();
-                    mMainPresenter.onClick(menuItems.get(pos).getId());
-                }
-            });
-            menuRecyclerView.setAdapter(menuAdapter);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
     @Override
-    public void setList(LatestNews latestNews) {
+    public void setNewsAdapterList(LatestNews latestNews) {
         String date = latestNews.getDate();
         for (StoriesEntity entity :
                 latestNews.getStories()) {
             entity.setDate(date);
         }
+        newsRecyclerView.setAdapter(newsAdapter);
         newsAdapter.setStoriesList(latestNews.getStories());
         newsAdapter.setTopStoriesList(latestNews.getTop_stories());
     }
 
+    /**
+     * 第一次
+     *
+     * @param themeStories
+     */
     @Override
-    public void addToAdapter(List<StoriesEntity> stories) {
+    public void setThemeNewsAdapterList(ThemeStories themeStories) {
+        themeNewsAdapter.setListStories(themeStories);
+        newsRecyclerView.setAdapter(themeNewsAdapter);
+    }
+
+
+    /**
+     * 加载过往内容
+     *
+     * @param stories
+     */
+    @Override
+    public void addToNewsAdapter(List<StoriesEntity> stories) {
         newsAdapter.addList(stories);
     }
 
+
     @Override
-    public void testAdapter(ThemeNewsAdapter adapter) {
-        mRecyclerView.setAdapter(adapter);
+    public void setMenuAdapter(final List<Theme> menuItems) {
+        menuAdapter = new MenuAdapter(MainActivity.this, menuItems);
+        menuAdapter.setListener(new MenuAdapter.onClickListener() {
+            @Override
+            public void onClick(View v, int pos) {
+                flag = 1;
+                mDrawerLayout.closeDrawers();
+                mToolbar.setTitle(menuItems.get(pos).getName());
+                mMainPresenter.onClick(menuItems.get(pos).getId());
+            }
+        });
+        menuRecyclerView.setAdapter(menuAdapter);
     }
+
 }

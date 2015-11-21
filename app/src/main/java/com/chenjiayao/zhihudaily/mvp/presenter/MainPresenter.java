@@ -1,18 +1,27 @@
 package com.chenjiayao.zhihudaily.mvp.presenter;
 
 import android.content.Context;
+import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 
-import com.chenjiayao.zhihudaily.adapter.ThemeNewsAdapter;
 import com.chenjiayao.zhihudaily.constant;
 import com.chenjiayao.zhihudaily.model.LatestNews;
 import com.chenjiayao.zhihudaily.model.StoriesEntity;
+import com.chenjiayao.zhihudaily.model.Theme;
 import com.chenjiayao.zhihudaily.model.ThemeStories;
 import com.chenjiayao.zhihudaily.model.beforeContent;
 import com.chenjiayao.zhihudaily.mvp.view.MainView;
 import com.chenjiayao.zhihudaily.uitls.HttpUtils;
 import com.google.gson.Gson;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.TextHttpResponseHandler;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -52,7 +61,7 @@ public class MainPresenter {
 
 
     /**
-     * 最开始从服务器上面加载最新的内容.没有加载成功的话就加载在数据库中的缓存
+     * 首次加载 / 下拉刷新
      */
     public void loadFirst() {
         isLoading = true;
@@ -88,7 +97,7 @@ public class MainPresenter {
     }
 
     /**
-     * 解析网络返回的json数据
+     * 解析今日日报内容
      *
      * @param responseString
      */
@@ -103,31 +112,53 @@ public class MainPresenter {
             entity.setDate(convertDate(date));
         }
 
-        mainView.setList(latestNews);
+        mainView.setNewsAdapterList(latestNews);
     }
 
+/////////////////////////////////////////////////////////////////////////////////
 
     /**
-     * 加载过往信息
+     * 加载往期日报内容
+     *
+     * @param manager
      */
-    public void loadMore() {
-        if (!isLoadingMore) {
+    public void loadMore(LinearLayoutManager manager, int flag) {
+
+        int visibleItemCount = manager.getChildCount();
+        int totalItemCount = manager.getItemCount();
+        int first = manager.findFirstVisibleItemPosition();
+
+        if (first + visibleItemCount >= totalItemCount && !isLoadingMore) {
+            //可以加载更多
             isLoadingMore = true;
-            HttpUtils.get(constant.BEFORE_URL + date, new TextHttpResponseHandler() {
-                @Override
-                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
 
-                }
+            //加载首页往期内容
+            if (0 == flag) {
+                HttpUtils.get(constant.BEFORE_URL + date, new TextHttpResponseHandler() {
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
 
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                    isLoadingMore = false;
-                    parseBeforeResponseString(responseString);
-                }
-            });
+                    }
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                        isLoadingMore = false;
+                        parseBeforeResponseString(responseString);
+                    }
+                });
+                //加载主题日报往期内容
+            } else {
+                //由于没有提供API,,,,所以这个功能就不能实现了/
+                isLoadingMore = false;
+            }
         }
     }
 
+    /**
+     * 解析往期的日报内容
+     *
+     * @param responseString
+     */
     private void parseBeforeResponseString(String responseString) {
         Gson gson = new Gson();
         beforeContent content = gson.fromJson(responseString, com.chenjiayao.zhihudaily.model.beforeContent.class);
@@ -135,10 +166,13 @@ public class MainPresenter {
         for (StoriesEntity entity : content.getStories()) {
             entity.setDate(convertDate(date));
         }
-        mainView.addToAdapter(content.getStories());
+        latestNews.getStories().addAll(content.getStories());
+        mainView.addToNewsAdapter(content.getStories());
     }
 
+
     /**
+     * 格式转换
      * 20151121 ---> 2015年11月21日
      *
      * @param date
@@ -154,6 +188,14 @@ public class MainPresenter {
         return res;
     }
 
+    /////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * 点击抽屉菜单item的响应
+     *
+     * @param id
+     */
     public void onClick(String id) {
         if (HttpUtils.isNetworkConnected(context)) {
             HttpUtils.get("theme/" + id, new TextHttpResponseHandler() {
@@ -170,18 +212,66 @@ public class MainPresenter {
         }
     }
 
+
     /**
-     * 主题日报
+     * 解析主题日报格式
      *
      * @param responseString
      */
     private void parseThemeResponse(String responseString) {
         Gson gson = new Gson();
         ThemeStories themeStories = gson.fromJson(responseString, ThemeStories.class);
+        mainView.setThemeNewsAdapterList(themeStories);
+    }
 
-        ThemeNewsAdapter adapter = new ThemeNewsAdapter(context);
-        adapter.setListStories(themeStories);
-        mainView.testAdapter(adapter);
+    ////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////
+
+    /**
+     * 加载主题日报菜单
+     */
+    public void loadTheme() {
+        if (HttpUtils.isNetworkConnected(context)) {
+            HttpUtils.get(constant.THEME, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    super.onSuccess(statusCode, headers, response);
+                    parseJson(response);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    super.onFailure(statusCode, headers, responseString, throwable);
+                }
+            });
+        }
+    }
+
+
+    /**
+     * 解析主题日报的json格式
+     *
+     * @param json
+     */
+    private void parseJson(JSONObject json) {
+        try {
+            JSONArray itemArray = json.getJSONArray("others");
+            List<Theme> menuItems = new ArrayList<>();
+            for (int i = 0; i < itemArray.length(); i++) {
+                Theme theme = new Theme();
+                JSONObject item = itemArray.getJSONObject(i);
+                theme.setId(item.getString("id"));
+                theme.setName(item.getString("name"));
+                menuItems.add(theme);
+                mainView.setMenuAdapter(menuItems);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void toHomePage() {
+        mainView.setNewsAdapterList(latestNews);
     }
 }
 

@@ -7,10 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chenjiayao.zhihudaily.R;
-import com.chenjiayao.zhihudaily.model.StoriesEntity;
 import com.chenjiayao.zhihudaily.model.ThemeStories;
-
-import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -18,22 +15,27 @@ import butterknife.ButterKnife;
 /**
  * Created by chen on 2015/11/21.
  */
-public class ThemeNewsAdapter extends BaseAdapter {
+public class ThemeNewsAdapter extends BaseAdapter implements View.OnClickListener {
 
 
     public ThemeNewsAdapter(Context context) {
         super(context);
         stories = new ThemeStories();
-        stories.setStories(new ArrayList<StoriesEntity>());
 
     }
 
-
+    //初次加载调用
     public void setListStories(ThemeStories listStories) {
         stories = listStories;
         notifyDataSetChanged();
     }
 
+    //加载更多调用
+    public void addListSroies(ThemeStories listStories) {
+        int size = listStories.getStories().size();
+        stories.getStories().addAll(listStories.getStories());
+        notifyItemRangeInserted(listStories.getStories().size(), size);
+    }
 
     @Override
     public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -65,13 +67,27 @@ public class ThemeNewsAdapter extends BaseAdapter {
                     viewHolder.ivPicture.setVisibility(View.VISIBLE);
                 }
             }
+            viewHolder.itemView.setTag(position);
             viewHolder.tvTitle.setText(stories.getStories().get(position).getTitle());
+            viewHolder.itemView.setOnClickListener(this);
         }
     }
 
     @Override
     public int getItemCount() {
         return stories.getStories().size();
+    }
+
+    public void setListener(onRecyclerViewItemListener listener) {
+        this.recyclerViewItemListener = listener;
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (recyclerViewItemListener != null) {
+            int pos = (int) v.getTag();
+            recyclerViewItemListener.onClick(v, stories.getStories().get(pos), pos);
+        }
     }
 
 
@@ -89,6 +105,7 @@ public class ThemeNewsAdapter extends BaseAdapter {
 
         }
     }
+
 
     public class HeadViewHolder extends BaseViewHolder {
 
