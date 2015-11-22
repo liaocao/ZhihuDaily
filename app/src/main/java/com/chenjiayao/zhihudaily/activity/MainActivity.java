@@ -55,7 +55,8 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
     MainPresenter mMainPresenter;
     private ActionBarDrawerToggle toggle;
 
-    NewsAdapter newsAdapter;
+    NewsAdapter newsAdapter ;
+
     MenuAdapter menuAdapter;
 
     @Bind(R.id.main_page)

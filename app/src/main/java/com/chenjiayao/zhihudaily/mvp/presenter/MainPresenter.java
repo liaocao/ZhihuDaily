@@ -69,31 +69,18 @@ public class MainPresenter {
             HttpUtils.get(constant.NEWS, new TextHttpResponseHandler() {
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    //如果从网络获取失败,从数据库中获取缓存
-                    getFromCache();
-                    mainView.isRefreshing(false);
+
                 }
 
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, String responseString) {
                     parseTodayResponseString(responseString);
-                    mainView.isRefreshing(false);
                     isLoading = false;
                 }
             });
-        } else {
-            //没有网络直接获取缓存
-            mainView.isRefreshing(false);
-            isLoading = false;
         }
     }
 
-    /**
-     * 从本地缓存里面获取数据
-     */
-    private void getFromCache() {
-        isLoading = false;
-    }
 
     /**
      * 解析今日日报内容
@@ -105,11 +92,12 @@ public class MainPresenter {
         latestNews = gson.fromJson(responseString, LatestNews.class);
         date = latestNews.getDate();
         lastDate = date;
-
         for (StoriesEntity entity :
                 latestNews.getStories()) {
             entity.setDate(convertDate(date));
         }
+        isLoading = false;
+        mainView.isRefreshing(false);
 
         mainView.setNewsAdapterList(latestNews);
     }
@@ -127,13 +115,12 @@ public class MainPresenter {
         int totalItemCount = manager.getItemCount();
         int first = manager.findFirstVisibleItemPosition();
 
-        if (HttpUtils.isNetworkConnected(context)) {
-            if (first + visibleItemCount >= totalItemCount && !isLoadingMore) {
-                //可以加载更多
-                isLoadingMore = true;
+        if (first + visibleItemCount >= totalItemCount && !isLoadingMore) {
 
-                //加载首页往期内容
-                if (0 == flag) {
+            //可以加载更多
+            isLoadingMore = true;
+            if (0 == flag) {
+                if (HttpUtils.isNetworkConnected(context)) {
                     HttpUtils.get(constant.BEFORE_URL + date, new TextHttpResponseHandler() {
                         @Override
                         public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
@@ -142,14 +129,10 @@ public class MainPresenter {
 
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                            isLoadingMore = false;
                             parseBeforeResponseString(responseString);
                         }
                     });
-                    //加载主题日报往期内容
-                } else {
-                    //由于没有提供API,,,,所以这个功能就不能实现了/
-                    isLoadingMore = false;
+
                 }
             }
         }
@@ -167,6 +150,7 @@ public class MainPresenter {
         for (StoriesEntity entity : content.getStories()) {
             entity.setDate(convertDate(date));
         }
+        isLoadingMore = false;
         latestNews.getStories().addAll(content.getStories());
         mainView.addToNewsAdapter(content.getStories());
     }
@@ -208,7 +192,6 @@ public class MainPresenter {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, String responseString) {
 
-                    //离线缓存
                     parseThemeResponse(responseString);
                 }
             });
