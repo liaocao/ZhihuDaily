@@ -26,8 +26,20 @@
 + [ButterKnife][4]
 + [Android-Universal-Image-Loader][5]
 
+##效果
+
+![死了][6]
+![此处输入图片的描述][7]
+![此处输入图片的描述][8]
+![此处输入图片的描述][9]
+
+
   [1]: https://github.com/iKrelve/KuaiHu/blob/master/%E7%9F%A5%E4%B9%8E%E6%97%A5%E6%8A%A5API.md
   [2]: https://github.com/loopj/android-async-http
   [3]: https://github.com/google/gson
   [4]:https://github.com/JakeWharton/butterknife
   [5]:https://github.com/nostra13/Android-Universal-Image-Loader
+  [6]: https://github.com/GithubOnePiece/ZhihuDaily/blob/master/screenshot/1.png
+  [7]: https://github.com/GithubOnePiece/ZhihuDaily/blob/master/screenshot/2.png
+  [8]: https://github.com/GithubOnePiece/ZhihuDaily/blob/master/screenshot/3.png
+  [9]: https://github.com/GithubOnePiece/ZhihuDaily/blob/master/screenshot/4.png
