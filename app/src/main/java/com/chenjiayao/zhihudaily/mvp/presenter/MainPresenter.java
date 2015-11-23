@@ -65,7 +65,7 @@ public class MainPresenter {
     public void loadFirst() {
         isLoading = true;
         //异步加载文字
-        if (HttpUtils.isNetworkConnected(context)) {
+        if (HttpUtils.isNetworkConnected(context) && !isLoading) {
             HttpUtils.get(constant.NEWS, new TextHttpResponseHandler() {
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
@@ -75,7 +75,6 @@ public class MainPresenter {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, String responseString) {
                     parseTodayResponseString(responseString);
-                    isLoading = false;
                 }
             });
         }

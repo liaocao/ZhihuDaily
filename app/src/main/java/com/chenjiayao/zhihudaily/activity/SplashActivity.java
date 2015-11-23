@@ -26,7 +26,7 @@ import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by chen on 2015/11/15.
- * <p>
+ * <p/>
  * 根据url去获取json数组,
  * 解析json数组,获取图片的url地址
  * 下载图片,保存图片,完毕跳转MainActivity
@@ -61,13 +61,6 @@ public class SplashActivity extends BaseActivity {
                 .scaleX(1.2f)
                 .scaleY(1.2f)
                 .setListener(new Animate() {
-
-                    @Override
-                    public void onAnimationStart(Animator animation) {
-                        super.onAnimationStart(animation);
-                        loadNews();
-                    }
-
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         if (HttpUtils.isNetworkConnected(SplashActivity.this)) {
@@ -104,12 +97,6 @@ public class SplashActivity extends BaseActivity {
                 .start();
     }
 
-    /**
-     * 提前加载主界面的新闻
-     */
-    private void loadNews() {
-
-    }
 
     /**
      * 进入主界面
