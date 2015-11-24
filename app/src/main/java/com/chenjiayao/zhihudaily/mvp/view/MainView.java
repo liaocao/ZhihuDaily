@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface MainView {
 
-    void isRefreshing(boolean isRefresh);
+    void setRefreshing(boolean isRefresh);
 
 
     void setNewsAdapterList(LatestNews latestNews);

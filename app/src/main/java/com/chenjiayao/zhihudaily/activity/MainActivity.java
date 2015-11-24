@@ -158,7 +158,6 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
         if (0 == flag) {
             if (refreshLayout.isRefreshing()) {
                 refreshLayout.setRefreshing(true);
-
                 mMainPresenter.loadFirst();
 
             }
@@ -168,7 +167,7 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
     }
 
     @Override
-    public void isRefreshing(boolean isRefresh) {
+    public void setRefreshing(boolean isRefresh) {
         refreshLayout.setRefreshing(isRefresh);
     }
 
@@ -274,11 +273,7 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
      */
     @Override
     public void setNewsAdapterList(LatestNews latestNews) {
-        String date = latestNews.getDate();
-        for (StoriesEntity entity :
-                latestNews.getStories()) {
-            entity.setDate(date);
-        }
+
         newsRecyclerView.setAdapter(newsAdapter);
         newsAdapter.setStoriesList(latestNews.getStories());
         newsAdapter.setTopStoriesList(latestNews.getTop_stories());

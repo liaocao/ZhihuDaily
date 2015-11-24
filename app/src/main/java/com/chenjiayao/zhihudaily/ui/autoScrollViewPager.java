@@ -5,7 +5,6 @@ import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,7 +69,7 @@ public class autoScrollViewPager extends FrameLayout
 
 
     public interface OnItemClickListener {
-        public void onItemClick(View v, LatestNews.TopStoriesEntity entity);
+         void onItemClick(View v, LatestNews.TopStoriesEntity entity);
     }
 
 
@@ -98,7 +97,6 @@ public class autoScrollViewPager extends FrameLayout
                 .build();
         this.context = context;
 
-        Log.i("TAG", "构造函数");
         initView();
 
     }

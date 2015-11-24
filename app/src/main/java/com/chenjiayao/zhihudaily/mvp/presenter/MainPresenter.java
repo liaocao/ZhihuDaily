@@ -63,9 +63,10 @@ public class MainPresenter {
      * 首次加载 / 下拉刷新
      */
     public void loadFirst() {
-        isLoading = true;
+
         //异步加载文字
         if (HttpUtils.isNetworkConnected(context) && !isLoading) {
+            isLoading = true;
             HttpUtils.get(constant.NEWS, new TextHttpResponseHandler() {
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
@@ -96,7 +97,7 @@ public class MainPresenter {
             entity.setDate(convertDate(date));
         }
         isLoading = false;
-        mainView.isRefreshing(false);
+        mainView.setRefreshing(false);
 
         mainView.setNewsAdapterList(latestNews);
     }
@@ -150,6 +151,7 @@ public class MainPresenter {
             entity.setDate(convertDate(date));
         }
         isLoadingMore = false;
+        mainView.setRefreshing(false);
         latestNews.getStories().addAll(content.getStories());
         mainView.addToNewsAdapter(content.getStories());
     }
@@ -206,6 +208,7 @@ public class MainPresenter {
     private void parseThemeResponse(String responseString) {
         Gson gson = new Gson();
         ThemeStories themeStories = gson.fromJson(responseString, ThemeStories.class);
+        mainView.setRefreshing(false);
         mainView.setThemeNewsAdapterList(themeStories);
     }
 
