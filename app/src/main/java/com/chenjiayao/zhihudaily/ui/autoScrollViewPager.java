@@ -156,10 +156,18 @@ public class autoScrollViewPager extends FrameLayout
 
             newsViews.add(fm);
             fm.setOnClickListener(this);
+
+            if( 0== i){
+                dots.get(i).setImageResource(R.drawable.dot_focus);
+            }else{
+                dots.get(i).setImageResource(R.drawable.dot_blur);
+            }
         }
 
         viewPager.setAdapter(new MyPagerAdapter());
         viewPager.setCurrentItem(Integer.MAX_VALUE / 2 - (Integer.MAX_VALUE / 2 % len));
+        viewPager.setOnPageChangeListener(this);
+
         startPlay();
     }
 
@@ -220,7 +228,7 @@ public class autoScrollViewPager extends FrameLayout
     @Override
     public void onPageSelected(int position) {
         for (int i = 0; i < dots.size(); i++) {
-            if (position - 1 == i) {
+            if (position % dots.size() == i) {
                 dots.get(i).setImageResource(R.drawable.dot_focus);
             } else {
                 dots.get(i).setImageResource(R.drawable.dot_blur);
