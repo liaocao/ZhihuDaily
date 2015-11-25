@@ -2,6 +2,7 @@ package com.chenjiayao.zhihudaily.ui;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
@@ -36,6 +37,7 @@ public class autoScrollViewPager extends FrameLayout
 
     //    @Bind(R.id.item_top_title)
     TextView tvTitle;
+
     //    @Bind(R.id.item_top_picture)
     ImageView ivPicture;
 
@@ -59,17 +61,18 @@ public class autoScrollViewPager extends FrameLayout
     ImageLoader imageLoader;
     DisplayImageOptions options;
 
-    private Handler handler = new Handler();
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
 
-    /**
-     * 延时多久自动切换
-     */
-    private int delayTime;
-    private int currentItme;
+            handler.sendEmptyMessageDelayed(0, 4000);
+        }
+    };
 
 
     public interface OnItemClickListener {
-         void onItemClick(View v, LatestNews.TopStoriesEntity entity);
+        void onItemClick(View v, LatestNews.TopStoriesEntity entity);
     }
 
 
@@ -105,14 +108,10 @@ public class autoScrollViewPager extends FrameLayout
         newsViews = new ArrayList<>();
         dots = new ArrayList<>();
 
-        delayTime = 3000;
     }
 
     public void setTopStoriesEntities(List<LatestNews.TopStoriesEntity> list) {
         this.topStoriesEntities = list;
-        if (task != null) {
-            handler.removeCallbacks(task);
-        }
         reset();
     }
 
@@ -128,7 +127,6 @@ public class autoScrollViewPager extends FrameLayout
          */
         View view = LayoutInflater.from(context).inflate(R.layout.dot_layout, this, true);
 
-//        ButterKnife.bind(view, this); I dont't clear why it can't work
 
         viewPager = (ViewPager) view.findViewById(R.id.vp);
         inflateDot = (LinearLayout) view.findViewById(R.id.ll_dot);
@@ -136,84 +134,39 @@ public class autoScrollViewPager extends FrameLayout
         inflateDot.removeAllViews();
 
         int len = topStoriesEntities.size();
+        //0  1  2  3  4
 
         for (int i = 0; i < len; i++) {
-            ImageView imageView = new ImageView(context);
 
+            ImageView iv_dot = new ImageView(context);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            params.leftMargin = 5;
+            params.rightMargin = 5;
+            inflateDot.addView(iv_dot, params);
+            dots.add(iv_dot);
 
-            params.leftMargin = 6;
-            params.rightMargin = 6;
+            View fm = LayoutInflater.from(context).inflate(R.layout.view_pager_item, null);
+            ImageView imageView = (ImageView) fm.findViewById(R.id.item_top_picture);
+            TextView textView = (TextView) fm.findViewById(R.id.item_top_title);
 
-            inflateDot.addView(imageView, params);
+            imageLoader.displayImage(topStoriesEntities.get(i).getImage(), imageView, options);
+            textView.setText(topStoriesEntities.get(i).getTitle());
 
-            dots.add(imageView);
+            newsViews.add(fm);
+            fm.setOnClickListener(this);
         }
 
-
-        for (int i = 0; i <= len + 1; i++) {
-            View fragmentView = LayoutInflater.from(context).inflate(R.layout.view_pager_item, null);
-//            ButterKnife.bind(fragmentView, this);
-            tvTitle = (TextView) fragmentView.findViewById(R.id.item_top_title);
-            ivPicture = (ImageView) fragmentView.findViewById(R.id.item_top_picture);
-
-            /**
-             * if len = 5,then do seven times,create seven fragmentViews
-             *  0  1  2  3  4  5  6
-             *  4  0  1  2  3  4  0
-             */
-            if (0 == i) {
-                imageLoader.displayImage(topStoriesEntities.get(len - 1).getImage(), ivPicture, options);
-                tvTitle.setText(topStoriesEntities.get(len - 1).getTitle());
-            } else if (len + 1 == i) {
-                imageLoader.displayImage(topStoriesEntities.get(0).getImage(), ivPicture, options);
-                tvTitle.setText(topStoriesEntities.get(0).getTitle());
-            } else {
-                imageLoader.displayImage(topStoriesEntities.get(i - 1).getImage(), ivPicture, options);
-                tvTitle.setText(topStoriesEntities.get(i - 1).getTitle());
-            }
-            //填充了 len + 1个图片
-
-            newsViews.add(fragmentView);
-            fragmentView.setOnClickListener(this);
-
-        }
-        currentItme = 1;
-        viewPager.setCurrentItem(1);
-        viewPager.setFocusable(true);
         viewPager.setAdapter(new MyPagerAdapter());
-        viewPager.setOnPageChangeListener(this);
+        viewPager.setCurrentItem(Integer.MAX_VALUE / 2 - (Integer.MAX_VALUE / 2 % len));
         startPlay();
     }
 
 
     private void startPlay() {
-
-        isAutoPlay = true;
-        handler.postDelayed(task, delayTime);
+        handler.sendEmptyMessageDelayed(0, 4000);
     }
-
-
-    //轮播核心代码
-    private final Runnable task = new Runnable() {
-        //开始自动轮播
-        @Override
-        public void run() {
-            if (isAutoPlay) {
-                currentItme = currentItme % (topStoriesEntities.size() + 1) + 1;
-                if (1 == currentItme) {
-                    viewPager.setCurrentItem(currentItme, true);
-                    handler.post(task);
-                } else {
-                    viewPager.setCurrentItem(currentItme);
-                    handler.postDelayed(task, delayTime);
-                }
-            } else {
-                handler.postDelayed(task, 5000);
-            }
-        }
-    };
 
 
     /**
@@ -224,7 +177,7 @@ public class autoScrollViewPager extends FrameLayout
     @Override
     public void onClick(View v) {
         if (listener != null) {
-            LatestNews.TopStoriesEntity entity = topStoriesEntities.get(viewPager.getCurrentItem() - 1);
+            LatestNews.TopStoriesEntity entity = topStoriesEntities.get(viewPager.getCurrentItem() % topStoriesEntities.size());
             listener.onItemClick(v, entity);
         }
     }
@@ -235,7 +188,7 @@ public class autoScrollViewPager extends FrameLayout
 
         @Override
         public int getCount() {
-            return newsViews.size();
+            return Integer.MAX_VALUE;
         }
 
         @Override
@@ -245,8 +198,9 @@ public class autoScrollViewPager extends FrameLayout
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            container.addView(newsViews.get(position));
-            return newsViews.get(position);
+
+            container.addView(newsViews.get(position % newsViews.size()));
+            return newsViews.get(position % newsViews.size());
         }
 
         @Override
@@ -266,7 +220,7 @@ public class autoScrollViewPager extends FrameLayout
     @Override
     public void onPageSelected(int position) {
         for (int i = 0; i < dots.size(); i++) {
-            if (i == position - 1) {
+            if (position - 1 == i) {
                 dots.get(i).setImageResource(R.drawable.dot_focus);
             } else {
                 dots.get(i).setImageResource(R.drawable.dot_blur);
@@ -276,22 +230,6 @@ public class autoScrollViewPager extends FrameLayout
 
     @Override
     public void onPageScrollStateChanged(int state) {
-        switch (state) {
-            case ViewPager.SCROLL_STATE_DRAGGING:
-                isAutoPlay = false;
-                break;
-            case ViewPager.SCROLL_STATE_SETTLING:
-                isAutoPlay = true;
-                break;
-            case ViewPager.SCROLL_STATE_IDLE:
-                if (0 == viewPager.getCurrentItem()) {
-                    viewPager.setCurrentItem(topStoriesEntities.size(), false);
-                } else if (viewPager.getCurrentItem() == topStoriesEntities.size() + 1) {
-                    viewPager.setCurrentItem(1, false);
-                }
-                currentItme = viewPager.getCurrentItem();
-                isAutoPlay = true;
-                break;
-        }
+
     }
 }

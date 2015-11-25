@@ -317,4 +317,9 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
         menuRecyclerView.setAdapter(menuAdapter);
     }
 
+
+    @Override
+    public void finish() {
+        super.finish();
+    }
 }
