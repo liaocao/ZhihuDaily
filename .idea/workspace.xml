@@ -52,7 +52,7 @@
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chenjiayao/zhihudaily/activity/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="66" column="21" selection-start-line="66" selection-start-column="21" selection-end-line="66" selection-end-column="21" />
+              <caret line="250" column="0" selection-start-line="250" selection-start-column="0" selection-end-line="250" selection-end-column="0" />
               <folding>
                 <element signature="e#2483#2731#0" expanded="true" />
                 <element signature="e#2730#2731#0" expanded="true" />
@@ -66,8 +66,8 @@
                 <element signature="e#4099#4100#0" expanded="true" />
                 <element signature="e#4386#4387#0" expanded="true" />
                 <element signature="e#4440#4441#0" expanded="true" />
-                <element signature="e#9584#9585#0" expanded="true" />
-                <element signature="e#9614#9615#0" expanded="true" />
+                <element signature="e#9879#9880#0" expanded="true" />
+                <element signature="e#9909#9910#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -76,8 +76,8 @@
       <file leaf-file-name="MainPresenter.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chenjiayao/zhihudaily/mvp/presenter/MainPresenter.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-2.7593262">
-              <caret line="125" column="21" selection-start-line="125" selection-start-column="21" selection-end-line="125" selection-end-column="21" />
+            <state vertical-scroll-proportion="0.33333334">
+              <caret line="138" column="17" selection-start-line="138" selection-start-column="17" selection-end-line="138" selection-end-column="17" />
               <folding />
             </state>
           </provider>
@@ -1645,8 +1645,8 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/chenjiayao/zhihudaily/activity/SplashActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/chenjiayao/zhihudaily/ui/autoScrollViewPager.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/chenjiayao/zhihudaily/adapter/NewsAdapter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/chenjiayao/zhihudaily/mvp/presenter/MainPresenter.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/chenjiayao/zhihudaily/activity/MainActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/chenjiayao/zhihudaily/mvp/presenter/MainPresenter.java" />
       </list>
     </option>
   </component>
@@ -2269,8 +2269,8 @@
             <element signature="e#4099#4100#0" expanded="true" />
             <element signature="e#4386#4387#0" expanded="true" />
             <element signature="e#4440#4441#0" expanded="true" />
-            <element signature="e#9584#9585#0" expanded="true" />
-            <element signature="e#9614#9615#0" expanded="true" />
+            <element signature="e#9879#9880#0" expanded="true" />
+            <element signature="e#9909#9910#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2674,7 +2674,7 @@
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chenjiayao/zhihudaily/activity/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="66" column="21" selection-start-line="66" selection-start-column="21" selection-end-line="66" selection-end-column="21" />
+          <caret line="250" column="0" selection-start-line="250" selection-start-column="0" selection-end-line="250" selection-end-column="0" />
           <folding>
             <element signature="e#2483#2731#0" expanded="true" />
             <element signature="e#2730#2731#0" expanded="true" />
@@ -2688,16 +2688,16 @@
             <element signature="e#4099#4100#0" expanded="true" />
             <element signature="e#4386#4387#0" expanded="true" />
             <element signature="e#4440#4441#0" expanded="true" />
-            <element signature="e#9584#9585#0" expanded="true" />
-            <element signature="e#9614#9615#0" expanded="true" />
+            <element signature="e#9879#9880#0" expanded="true" />
+            <element signature="e#9909#9910#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chenjiayao/zhihudaily/mvp/presenter/MainPresenter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-2.7593262">
-          <caret line="125" column="21" selection-start-line="125" selection-start-column="21" selection-end-line="125" selection-end-column="21" />
+        <state vertical-scroll-proportion="0.33333334">
+          <caret line="138" column="17" selection-start-line="138" selection-start-column="17" selection-end-line="138" selection-end-column="17" />
           <folding />
         </state>
       </provider>

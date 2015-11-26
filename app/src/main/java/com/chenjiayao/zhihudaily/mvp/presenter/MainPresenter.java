@@ -109,13 +109,9 @@ public class MainPresenter {
      *
      * @param manager
      */
-    public void loadMore(LinearLayoutManager manager) {
+    public void loadMore() {
 
-        int visibleItemCount = manager.getChildCount();
-        int totalItemCount = manager.getItemCount();
-        int first = manager.findFirstVisibleItemPosition();
-
-        if (first + visibleItemCount >= totalItemCount && !isLoadingMore) {
+        if (!isLoadingMore) {
 
             isLoadingMore = true;
             if (HttpUtils.isNetworkConnected(context)) {

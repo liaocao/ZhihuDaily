@@ -245,7 +245,13 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    mMainPresenter.loadMore(manager);
+                    int visibleItemCount = manager.getChildCount();
+                    int totalItemCount = manager.getItemCount();
+                    int first = manager.findFirstVisibleItemPosition();
+
+                    if (first + visibleItemCount >= totalItemCount) {
+                        mMainPresenter.loadMore();
+                    }
                 }
             }
 
