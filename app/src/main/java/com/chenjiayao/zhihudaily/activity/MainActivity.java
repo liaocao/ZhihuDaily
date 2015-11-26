@@ -53,7 +53,7 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
     MainPresenter mMainPresenter;
     private ActionBarDrawerToggle toggle;
 
-    NewsAdapter newsAdapter ;
+    NewsAdapter newsAdapter;
 
     MenuAdapter menuAdapter;
 
@@ -63,11 +63,7 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
     List<Theme> menuItems;
     private ThemeNewsAdapter themeNewsAdapter;
 
-    /**
-     * 0 代表首页
-     * 1 代表主题
-     */
-    int flag = 0;
+
     private MenuItem item;
 
 
@@ -92,7 +88,6 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
                 mDrawerLayout.closeDrawers();
                 mMainPresenter.toHomePage();
                 mToolbar.setTitle("首页");
-                flag = 0;
             }
         });
 
@@ -155,15 +150,12 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
      */
     @Override
     public void onRefresh() {
-        if (0 == flag) {
-            if (refreshLayout.isRefreshing()) {
-                refreshLayout.setRefreshing(true);
-                mMainPresenter.loadFirst();
+        if (refreshLayout.isRefreshing()) {
+            refreshLayout.setRefreshing(true);
+            mMainPresenter.loadFirst();
 
-            }
-        } else {
-            refreshLayout.setRefreshing(false);
         }
+
     }
 
     @Override
@@ -252,12 +244,15 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    mMainPresenter.loadMore(manager);
+                }
             }
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                mMainPresenter.loadMore(manager, flag);
+
             }
         });
 
@@ -308,7 +303,6 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
         menuAdapter.setListener(new MenuAdapter.onClickListener() {
             @Override
             public void onClick(View v, int pos) {
-                flag = 1;
                 mDrawerLayout.closeDrawers();
                 mToolbar.setTitle(menuItems.get(pos).getName());
                 mMainPresenter.onClick(menuItems.get(pos).getId());

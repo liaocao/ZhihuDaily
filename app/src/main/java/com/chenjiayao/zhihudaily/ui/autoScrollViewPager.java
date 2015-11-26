@@ -42,7 +42,6 @@ public class autoScrollViewPager extends FrameLayout
     ImageView ivPicture;
 
 
-    boolean isAutoPlay = true;
 
     /**
      * 用来填充一个title和imageview的view
@@ -107,7 +106,6 @@ public class autoScrollViewPager extends FrameLayout
     private void initView() {
         newsViews = new ArrayList<>();
         dots = new ArrayList<>();
-
     }
 
     public void setTopStoriesEntities(List<LatestNews.TopStoriesEntity> list) {

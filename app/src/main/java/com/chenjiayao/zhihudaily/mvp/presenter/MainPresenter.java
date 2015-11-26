@@ -109,7 +109,7 @@ public class MainPresenter {
      *
      * @param manager
      */
-    public void loadMore(LinearLayoutManager manager, int flag) {
+    public void loadMore(LinearLayoutManager manager) {
 
         int visibleItemCount = manager.getChildCount();
         int totalItemCount = manager.getItemCount();
@@ -117,23 +117,20 @@ public class MainPresenter {
 
         if (first + visibleItemCount >= totalItemCount && !isLoadingMore) {
 
-            //可以加载更多
             isLoadingMore = true;
-            if (0 == flag) {
-                if (HttpUtils.isNetworkConnected(context)) {
-                    HttpUtils.get(constant.BEFORE_URL + date, new TextHttpResponseHandler() {
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+            if (HttpUtils.isNetworkConnected(context)) {
+                HttpUtils.get(constant.BEFORE_URL + date, new TextHttpResponseHandler() {
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
 
-                        }
+                    }
 
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                            parseBeforeResponseString(responseString);
-                        }
-                    });
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                        parseBeforeResponseString(responseString);
+                    }
+                });
 
-                }
             }
         }
     }
