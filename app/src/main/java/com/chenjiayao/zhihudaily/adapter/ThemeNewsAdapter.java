@@ -71,6 +71,7 @@ public class ThemeNewsAdapter extends BaseAdapter implements View.OnClickListene
             viewHolder.tvTitle.setText(stories.getStories().get(position).getTitle());
             viewHolder.itemView.setOnClickListener(this);
         }
+
     }
 
     @Override

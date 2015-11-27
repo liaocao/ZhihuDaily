@@ -67,8 +67,6 @@ public class LatestContentActivity extends BaseActivity implements LatestContent
 
 
         mCollapsingToolbarLayout.setTitle(entity.getTitle());
-        mCollapsingToolbarLayout.setContentScrimColor(getResources().getColor(R.color.colorPrimary));
-        mCollapsingToolbarLayout.setStatusBarScrimColor(getResources().getColor(R.color.colorPrimaryDark));
 
 
         initWebView();

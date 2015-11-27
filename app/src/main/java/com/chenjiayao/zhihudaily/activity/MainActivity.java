@@ -192,7 +192,6 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
                 Intent intent = new Intent(MainActivity.this, LatestContentActivity.class);
                 intent.putExtra("entity", storiesEntity);
                 startActivity(intent);
-                //我懒得处理了.
             }
         });
 

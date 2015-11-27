@@ -4,6 +4,17 @@
 
 >这是一个仿造知乎日报的APP,业余学习时开发,APP并不完善,但是可以从中学到一些东西.至于API接口,感谢lzzyLeung提供的API接口.[这里][1]
 
+## 教程链接
+
++ [知乎日报教程一][http://githubonepiece.github.io/2015/11/22/Zhihu-Daily-one/]
++ [知乎日报教程二][http://githubonepiece.github.io/2015/11/22/Zhihu-Daily-two/]
++ [知乎日报教程三][http://githubonepiece.github.io/2015/11/23/Zhihu-Daily-Three/]
++ [知乎日报教程四][http://githubonepiece.github.io/2015/11/23/Zhihu-Daily-Four/]
++ [知乎日报教程五][http://githubonepiece.github.io/2015/11/24/Zhihu-Daily-Five/]
++ [知乎日报教程六][http://githubonepiece.github.io/2015/11/26/Zhihu-Daily-Six/]
++ [知乎日报教程七][http://githubonepiece.github.io/2015/11/26/Zhihu-Daily-Seven/]
++ [知乎日报教程八][http://githubonepiece.github.io/2015/11/26/Zhihu-Daily-Eight/]
+
 ##已完成功能
 
 + 启动动画
