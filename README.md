@@ -6,14 +6,14 @@
 
 ## 教程链接
 
-+ [知乎日报教程一][http://githubonepiece.github.io/2015/11/22/Zhihu-Daily-one/]
-+ [知乎日报教程二][http://githubonepiece.github.io/2015/11/22/Zhihu-Daily-two/]
-+ [知乎日报教程三][http://githubonepiece.github.io/2015/11/23/Zhihu-Daily-Three/]
-+ [知乎日报教程四][http://githubonepiece.github.io/2015/11/23/Zhihu-Daily-Four/]
-+ [知乎日报教程五][http://githubonepiece.github.io/2015/11/24/Zhihu-Daily-Five/]
-+ [知乎日报教程六][http://githubonepiece.github.io/2015/11/26/Zhihu-Daily-Six/]
-+ [知乎日报教程七][http://githubonepiece.github.io/2015/11/26/Zhihu-Daily-Seven/]
-+ [知乎日报教程八][http://githubonepiece.github.io/2015/11/26/Zhihu-Daily-Eight/]
++ [知乎日报教程一][10]
++ [知乎日报教程二][11]
++ [知乎日报教程三][12]
++ [知乎日报教程四][13]
++ [知乎日报教程五][14]
++ [知乎日报教程六][15]
++ [知乎日报教程七][16]
++ [知乎日报教程八][17]
 
 ##已完成功能
 
@@ -54,3 +54,11 @@
   [7]: https://github.com/GithubOnePiece/ZhihuDaily/blob/master/screenshot/2.png
   [8]: https://github.com/GithubOnePiece/ZhihuDaily/blob/master/screenshot/3.png
   [9]: https://github.com/GithubOnePiece/ZhihuDaily/blob/master/screenshot/4.png
+  [10]:http://githubonepiece.github.io/2015/11/22/Zhihu-Daily-one/
+  [11]:http://githubonepiece.github.io/2015/11/22/Zhihu-Daily-two/
+  [12]:http://githubonepiece.github.io/2015/11/23/Zhihu-Daily-Three/
+  [13]:http://githubonepiece.github.io/2015/11/23/Zhihu-Daily-Four/
+  [14]:http://githubonepiece.github.io/2015/11/24/Zhihu-Daily-Five/
+  [15]:http://githubonepiece.github.io/2015/11/26/Zhihu-Daily-Six/
+  [16]:http://githubonepiece.github.io/2015/11/26/Zhihu-Daily-Seven/
+  [17]:http://githubonepiece.github.io/2015/11/26/Zhihu-Daily-Eight/
